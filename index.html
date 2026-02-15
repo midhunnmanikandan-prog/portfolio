@@ -1,529 +1,1445 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Midhun M · Architectural 3D visualizer</title>
-  <!-- classic & creative fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
-  <!-- font awesome 6 (free) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <!-- AOS for scroll animations -->
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Midhun M - Architectural Visualizer</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    body {
-      background-color: #fbf7f2;  /* warm classic parchment */
-      color: #1f2a2e;
-      font-family: 'Inter', sans-serif;
-      font-weight: 300;
-      line-height: 1.6;
-      scroll-behavior: smooth;
-      overflow-x: hidden;
-    }
+    <style>
+        /* Dark Luxury Theme Variables */
+        :root {
+            --bg-dark: #0f1115;
+            --bg-card: #16191f;
+            --text-gold: #c5a47e;
+            --text-white: #e0e0e0;
+            --text-muted: #8b8b8b;
+            --accent-glow: rgba(197, 164, 126, 0.15);
+        }
 
-    h1, h2, h3, h4 {
-      font-family: 'Cormorant Garamond', serif;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-    }
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-white);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
 
-    h2 {
-      font-size: 3rem;
-      margin-bottom: 2.5rem;
-      position: relative;
-      display: inline-block;
-    }
-    h2:after {
-      content: '';
-      position: absolute;
-      bottom: -10px;
-      left: 0;
-      width: 70px;
-      height: 2px;
-      background-color: #b58b6b;
-      transition: width 0.4s ease;
-    }
-    h2:hover:after {
-      width: 120px;
-    }
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Playfair Display', serif;
+        }
 
-    .section {
-      padding: 5rem 1.5rem;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
+        /* Hero Section Styling */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at 70% 30%, #1a1d24 0%, var(--bg-dark) 70%);
+            overflow: hidden;
+            padding-top: 100px;
+            /* Prevent navbar overlap */
+        }
 
-    /* ---- animated background floating elements (classic creative touch) ---- */
-    .float-bg {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -2;
-      pointer-events: none;
-      overflow: hidden;
-    }
-    .float-bg span {
-      position: absolute;
-      display: block;
-      background: rgba(181, 139, 107, 0.03);
-      border-radius: 50%;
-      animation: float 18s infinite linear;
-    }
-    @keyframes float {
-      0% { transform: translateY(0) rotate(0deg) scale(1); }
-      50% { transform: translateY(-120px) rotate(180deg) scale(1.1); }
-      100% { transform: translateY(0) rotate(360deg) scale(1); }
-    }
+        /* Ambient Background Glow */
+        .ambient-glow {
+            position: absolute;
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, rgba(197, 164, 126, 0.08) 0%, transparent 70%);
+            top: -20%;
+            right: -10%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0;
+            /* Hidden initially for fade-in */
+        }
 
-    /* hero */
-    .hero {
-      min-height: 85vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      position: relative;
-    }
-    .hero-content {
-      max-width: 1000px;
-      padding: 2rem;
-      animation: softAppear 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-    }
-    @keyframes softAppear {
-      0% { opacity: 0; transform: scale(0.96); }
-      100% { opacity: 1; transform: scale(1); }
-    }
-    .hero-name {
-      font-size: 5.5rem;
-      font-weight: 700;
-      line-height: 1.1;
-      color: #1f2a2e;
-      text-shadow: 4px 4px 10px rgba(181, 139, 107, 0.1);
-      letter-spacing: -0.02em;
-    }
-    .hero-title {
-      font-size: 1.6rem;
-      font-weight: 300;
-      margin-top: 1.2rem;
-      color: #4f4f4a;
-      word-spacing: 6px;
-      font-family: 'Inter', sans-serif;
-      border-top: 1px solid #e2cfbc;
-      border-bottom: 1px solid #e2cfbc;
-      display: inline-block;
-      padding: 0.8rem 2rem;
-      backdrop-filter: blur(4px);
-    }
+        .container {
+            position: relative;
+            z-index: 2;
+        }
 
-    /* cards & grids */
-    .grid-2 {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 2.5rem;
-    }
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2.5rem;
-    }
-    .grid-4 {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 2rem;
-    }
+        /* Text Styling */
+        .hero-subtitle {
+            font-size: 1rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-gold);
+            margin-bottom: 1rem;
+            display: block;
+            opacity: 0;
+            /* Animation start state */
+            transform: translateY(20px);
+        }
 
-    .card {
-      background: rgba(255, 255, 255, 0.7);
-      backdrop-filter: blur(8px);
-      padding: 2rem 1.8rem;
-      border-radius: 24px;
-      box-shadow: 0 25px 40px -18px rgba(70, 50, 40, 0.15);
-      transition: all 0.3s ease;
-      border: 1px solid rgba(255, 255, 255, 0.6);
-    }
-    .card:hover {
-      transform: translateY(-12px) scale(1.01);
-      box-shadow: 0 30px 50px -20px #b58b6b;
-      border-color: #e1cbb8;
-    }
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            color: var(--text-white);
+            opacity: 0;
+            /* Animation start state */
+            transform: translateY(30px);
+        }
 
-    .skill-badge {
-      display: inline-block;
-      background: #f0e5db;
-      padding: 0.5rem 1.2rem;
-      border-radius: 40px;
-      margin: 0.3rem;
-      font-size: 0.95rem;
-      border: 1px solid #e2cfbc;
-      transition: 0.2s;
-    }
-    .skill-badge:hover {
-      background: #b58b6b;
-      color: white;
-      border-color: #b58b6b;
-      transform: scale(1.05);
-    }
+        .hero-title span {
+            color: var(--text-gold);
+            font-style: italic;
+            font-size: 3rem;
+            font-family: emoji;
+        }
 
-    .portfolio-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 2rem;
-      margin-top: 2rem;
-    }
-    .port-item {
-      position: relative;
-      background: linear-gradient(145deg, #e7dbcf, #f3ede7);
-      border-radius: 32px;
-      padding: 2rem 1rem 1.5rem;
-      text-align: center;
-      box-shadow: 0 15px 25px -10px rgba(90, 70, 55, 0.15);
-      transition: all 0.25s;
-      border: 1px solid rgba(255,255,240,0.7);
-      overflow: hidden;
-    }
-    .port-item:before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,250,0.7), transparent 70%);
-      opacity: 0;
-      transition: opacity 0.4s;
-    }
-    .port-item:hover:before {
-      opacity: 1;
-    }
-    .port-item i {
-      font-size: 3.5rem;
-      color: #b58b6b;
-      margin-bottom: 1rem;
-      transition: 0.2s;
-      position: relative;
-      z-index: 2;
-    }
-    .port-item h4 {
-      font-size: 1.6rem;
-      margin: 0.5rem 0;
-      position: relative;
-      z-index: 2;
-    }
-    .port-item p {
-      font-size: 0.9rem;
-      color: #5a4f48;
-      position: relative;
-      z-index: 2;
-    }
-    .port-item:hover i {
-      transform: scale(1.15) rotate(5deg);
-      color: #8f6a4d;
-    }
+        .hero-desc {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 500px;
+            line-height: 1.8;
+            margin-bottom: 2.5rem;
+            opacity: 0;
+            /* Animation start state */
+            transform: translateY(20px);
+            border-left: 2px solid var(--text-gold);
+            padding-left: 1.5rem;
+        }
 
-    /* timeline style for experience */
-    .exp-item {
-      padding-left: 2rem;
-      border-left: 3px solid #e2cfbc;
-      margin-bottom: 2.2rem;
-      transition: 0.2s;
-    }
-    .exp-item:hover {
-      border-left-color: #b58b6b;
-      padding-left: 2.5rem;
-    }
-    .exp-item h4 {
-      font-size: 1.8rem;
-      margin-bottom: 0.3rem;
-    }
+        /* Buttons */
+        .btn-gold {
+            background-color: transparent;
+            color: var(--text-gold);
+            border: 1px solid var(--text-gold);
+            padding: 12px 35px;
+            font-family: 'Inter', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+        }
 
-    .contact-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 2.5rem;
-      justify-content: center;
-      background: #fffbf7;
-      padding: 2.5rem;
-      border-radius: 60px;
-      border: 1px solid #e2cfbc;
-    }
-    .contact-item {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      font-size: 1.2rem;
-      transition: 0.2s;
-    }
-    .contact-item i {
-      font-size: 2rem;
-      color: #b58b6b;
-    }
-    .contact-item:hover {
-      transform: translateY(-5px);
-    }
+        .btn-gold:hover {
+            background-color: var(--text-gold);
+            color: var(--bg-dark);
+            box-shadow: 0 0 20px rgba(197, 164, 126, 0.4);
+        }
 
-    /* responsive */
-    @media (max-width: 900px) {
-      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
-      .hero-name { font-size: 3.8rem; }
-      h2 { font-size: 2.5rem; }
-    }
-    @media (max-width: 500px) {
-      .hero-name { font-size: 2.8rem; }
-      .section { padding: 3rem 1rem; }
-    }
+        .cta-wrapper {
+            opacity: 0;
+            /* Animation start state */
+            transform: translateY(20px);
+        }
 
-    /* additional classic touches */
-    .signature-line {
-      width: 120px;
-      height: 1px;
-      background: #b58b6b;
-      margin: 1rem 0 2rem;
-    }
-    .soft-highlight {
-      background: linear-gradient(145deg, #f3ece4, #fdf9f5);
-      border-radius: 40px;
-    }
+        /* Abstract Visual Element */
+        .visual-element {
+            position: relative;
+            height: 500px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            /* Animation start state */
+            transform: translateX(30px);
+        }
 
-    /* footer */
-    footer {
-      text-align: center;
-      padding: 2rem;
-      opacity: 0.7;
-      font-size: 0.9rem;
-      border-top: 1px dashed #dac5b3;
-    }
-  </style>
+        .floating-card {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .card-main {
+            width: 320px;
+            height: 420px;
+            z-index: 2;
+            top: 20px;
+            right: 40px;
+            background-image: url('./images/image3.jpeg');
+            background-size: cover;
+            background-position: center;
+            border: none;
+        }
+
+        .card-back {
+            width: 300px;
+            height: 400px;
+            z-index: 1;
+            top: -20px;
+            right: 0;
+            border: 1px solid var(--text-gold);
+        }
+
+        /* Scroll Down Indicator */
+        .scroll-down {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            animation: bounce 2s infinite;
+            opacity: 0;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateX(-50%) translateY(0);
+            }
+
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+
+        @media (max-width: 991px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+
+            .visual-element {
+                margin-top: 3rem;
+                transform: translateX(0);
+                height: 400px;
+            }
+
+            .card-main {
+                right: 0;
+                margin: 0 auto;
+                position: relative;
+            }
+
+            .card-back {
+                display: none;
+            }
+
+            .hero {
+                text-align: center;
+                padding: 4rem 1rem;
+            }
+
+            .hero-desc {
+                margin: 2rem auto;
+                border-left: none;
+                border-top: 2px solid var(--text-gold);
+                padding-top: 1rem;
+                padding-left: 0;
+            }
+
+            .ambient-glow {
+                width: 100vw;
+                height: 100vw;
+                top: 0;
+                right: 0;
+            }
+        }
+
+        /* About Section */
+        .about-section {
+            background-color: #16191f;
+            /* Slightly lighter than bg-dark */
+            padding: 100px 0;
+            position: relative;
+        }
+
+        .about-heading {
+            font-size: 3rem;
+            color: var(--text-gold);
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .about-text {
+            font-size: 1.25rem;
+            font-weight: 300;
+            line-height: 1.8;
+            color: var(--text-white);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out 0.2s;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .about-text span {
+            color: var(--text-gold);
+            font-weight: 400;
+        }
+
+        .reveal-visible {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+
+        /* Expertise Section */
+        .expertise-section {
+            padding: 80px 0;
+            background-color: #0f1115;
+            border-top: 1px solid rgba(197, 164, 126, 0.1);
+        }
+
+        .expertise-card {
+            background: #16191f;
+            padding: 40px;
+            border-radius: 4px;
+            height: 100%;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            border: 1px solid transparent;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .expertise-card:hover {
+            border-color: var(--text-gold);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transform: translateY(-5px) !important;
+            /* Override reveal transform */
+        }
+
+        .expertise-title {
+            font-size: 1.8rem;
+            color: var(--text-white);
+            margin-bottom: 1rem;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .expertise-text {
+            color: var(--text-muted);
+            font-size: 1rem;
+            font-weight: 300;
+            line-height: 1.6;
+            margin-bottom: 0;
+        }
+
+        /* Portfolio Section */
+        .portfolio-section {
+            padding: 100px 0;
+            background-color: #0b0d10;
+            /* Darkerest shade */
+        }
+
+        .portfolio-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .portfolio-img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .portfolio-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 30px;
+        }
+
+        .portfolio-item:hover .portfolio-img {
+            transform: scale(1.05);
+        }
+
+        .portfolio-item:hover .portfolio-overlay {
+            opacity: 1;
+        }
+
+        .portfolio-cat {
+            color: var(--text-gold);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            transform: translateY(10px);
+            transition: transform 0.4s ease;
+        }
+
+        .portfolio-name {
+            color: var(--text-white);
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            transform: translateY(10px);
+            transition: transform 0.4s ease 0.1s;
+        }
+
+        .portfolio-item:hover .portfolio-cat,
+        .portfolio-item:hover .portfolio-name {
+            transform: translateY(0);
+        }
+
+        /* Experience Section */
+        .experience-section {
+            padding: 120px 0;
+            background-color: #0f1115;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Abstract BG shapes for glassmorphism context */
+        .experience-bg-shape {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(197, 164, 126, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .exp-card {
+            background: rgba(22, 25, 31, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 40px 30px;
+            border-radius: 16px;
+            height: 100%;
+            transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .exp-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--text-gold), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .exp-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(197, 164, 126, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .exp-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .exp-year {
+            font-size: 4rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.03);
+            font-family: 'Playfair Display', serif;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            line-height: 1;
+            transition: color 0.4s ease;
+        }
+
+        .exp-card:hover .exp-year {
+            color: rgba(197, 164, 126, 0.1);
+        }
+
+        .exp-role {
+            font-size: 1.6rem;
+            color: var(--text-white);
+            margin-bottom: 5px;
+            font-family: 'Playfair Display', serif;
+            position: relative;
+            z-index: 1;
+        }
+
+        .exp-company {
+            color: var(--text-gold);
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .exp-duration {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
+            margin-top: auto;
+            display: flex;
+            align-items: center;
+        }
+
+        .edu-item {
+            opacity: 0;
+            transform: translateY(20px);
+            padding-left: 10px;
+            transition: all 0.5s ease;
+        }
+
+        .edu-item:hover {
+            border-left: 3px solid var(--text-gold);
+            padding-left: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateX(10px) !important;
+        }
+
+        .edu-icon {
+            font-size: 2.5rem;
+            color: var(--text-gold);
+            margin-right: 25px;
+            opacity: 0.8;
+        }
+
+        .edu-title {
+            font-size: 1.4rem;
+            color: var(--text-white);
+            margin-bottom: 5px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .edu-place {
+            color: var(--text-muted);
+            font-size: 1rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Skills Section */
+        .skills-section {
+            padding: 120px 0;
+            background-color: #0f1115;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .skills-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 60px;
+        }
+
+        .skill-tag {
+            background: rgba(197, 164, 126, 0.05);
+            border: 1px solid rgba(197, 164, 126, 0.2);
+            padding: 12px 25px;
+            border-radius: 50px;
+            color: var(--text-white);
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: default;
+        }
+
+        .skill-tag::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(197, 164, 126, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .skill-tag:hover {
+            border-color: var(--text-gold);
+            color: var(--text-gold);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(197, 164, 126, 0.1);
+        }
+
+        .skill-tag:hover::before {
+            left: 100%;
+        }
+
+        /* Modern 3D Holographic Software Skills */
+        .software-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            /* Centers items in the last row */
+            gap: 30px;
+            perspective: 1000px;
+            padding: 20px;
+        }
+
+        .holo-card {
+            flex: 0 1 200px;
+            /* Don't grow too much, base width 200px */
+            min-width: 150px;
+            background: rgba(22, 25, 31, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.1s ease-out;
+            /* Fast transition for tilt */
+            transform-style: preserve-3d;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .holo-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(197, 164, 126, 0.15) 0%, transparent 60%);
+            opacity: 0;
+            transform: scale(0.5);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .holo-card:hover::before {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .holo-card:hover {
+            border-color: rgba(197, 164, 126, 0.4);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 20px rgba(197, 164, 126, 0.2);
+        }
+
+        .holo-icon {
+            font-size: 2.5rem;
+            color: var(--text-white);
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+            transform: translateZ(20px);
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .holo-card:hover .holo-icon {
+            color: var(--text-gold);
+            transform: translateZ(40px) scale(1.1);
+            text-shadow: 0 0 20px rgba(197, 164, 126, 0.6);
+        }
+
+        .holo-name {
+            font-size: 1rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            transform: translateZ(10px);
+            transition: color 0.3s ease;
+        }
+
+        .holo-card:hover .holo-name {
+            color: var(--text-white);
+        }
+
+        .holo-shine {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .holo-card:hover .holo-shine {
+            opacity: 1;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            padding: 100px 0;
+            background-color: #0b0d10;
+            text-align: center;
+        }
+
+        .contact-item {
+            margin-bottom: 40px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+
+        .contact-icon {
+            font-size: 2.5rem;
+            color: var(--text-gold);
+            margin-bottom: 20px;
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+            line-height: 80px;
+            border-radius: 50%;
+            background: rgba(197, 164, 126, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .contact-item:hover .contact-icon {
+            background: var(--text-gold);
+            color: #0b0d10;
+            transform: scale(1.1);
+        }
+
+        .contact-label {
+            display: block;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .contact-value {
+            display: block;
+            color: var(--text-white);
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .contact-value:hover {
+            color: var(--text-gold);
+        }
+
+        /* Footer */
+        .footer {
+            padding: 40px 0;
+            background-color: #08090b;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Navigation Bar */
+        .navbar-custom {
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(22, 25, 31, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 12px 40px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            z-index: 1000;
+            display: flex;
+            gap: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .nav-link-custom {
+            color: var(--text-white);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+            position: relative;
+            padding: 5px 0;
+        }
+
+        .nav-link-custom:hover,
+        .nav-link-custom.active {
+            color: var(--text-gold);
+        }
+
+        .nav-link-custom::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: var(--text-gold);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link-custom:hover::after,
+        .nav-link-custom.active::after {
+            width: 100%;
+        }
+
+        @media (max-width: 991px) {
+            .navbar-custom {
+                top: 20px;
+                padding: 10px 25px;
+                gap: 20px;
+                width: 90%;
+                justify-content: center;
+            }
+
+            .nav-link-custom {
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .navbar-custom {
+                top: auto;
+                bottom: 20px;
+                /* Move to bottom for mobile reachability */
+                width: 95%;
+                gap: 15px;
+                padding: 12px 15px;
+            }
+
+            .nav-link-custom {
+                font-size: 0.7rem;
+                letter-spacing: 0;
+            }
+        }
+    </style>
 </head>
-<body>
 
-<!-- floating background animation (subtle & creative) -->
-<div class="float-bg">
-  <span style="width: 250px; height: 250px; top: 10%; left: -5%;"></span>
-  <span style="width: 400px; height: 400px; bottom: 0; right: -10%; animation-duration: 28s;"></span>
-  <span style="width: 150px; height: 150px; top: 40%; left: 80%; animation-duration: 14s;"></span>
-  <span style="width: 300px; height: 300px; bottom: 20%; left: 15%; animation-duration: 22s;"></span>
-</div>
+<body id="home" data-bs-spy="scroll" data-bs-target="#navbar-custom" data-bs-offset="100" tabindex="0">
 
-<!-- HERO SECTION -->
-<section class="hero">
-  <div class="hero-content">
-    <h1 class="hero-name" data-aos="fade-down" data-aos-duration="1400">Midhun M</h1>
-    <div class="hero-title" data-aos="zoom-in" data-aos-delay="200" data-aos-duration="1000">
-      Architectural 3D Visualizer <span style="font-weight:200;">|</span> 3D Animation Specialist
-    </div>
-    <div style="margin-top: 2.5rem;" data-aos="fade-up" data-aos-delay="400">
-      <a href="#portfolio" style="border:1px solid #b58b6b; padding:0.8rem 2.2rem; border-radius: 50px; font-weight:400; color:#1f2a2e; text-decoration:none; transition:0.3s; background: rgba(255,255,255,0.4); backdrop-filter:blur(4px);">explore work <i class="fa-regular fa-arrow-right" style="margin-left:8px;"></i></a>
-    </div>
-  </div>
-</section>
+    <!-- Navigation -->
+    <nav class="navbar-custom" id="navbar-custom">
+        <a href="#home" class="nav-link-custom active">Home</a>
+        <a href="#about" class="nav-link-custom">About</a>
+        <a href="#portfolio" class="nav-link-custom">Portfolio</a>
+        <a href="#experience" class="nav-link-custom">Exp</a>
+        <a href="#skills" class="nav-link-custom">Skills</a>
+        <a href="#contact" class="nav-link-custom">Contact</a>
+    </nav>
 
-<!-- ABOUT -->
-<section class="section" id="about">
-  <h2 data-aos="fade-right">About</h2>
-  <div class="grid-2" style="align-items: center;">
-    <div data-aos="fade-up" data-aos-delay="100">
-      <p style="font-size: 1.4rem; font-weight: 300; line-height: 1.6; color: #2f3a3e;">
-      I am a Senior Architectural 3D Visualizer with professional experience in creating exterior renders, interior visualizations, and architectural walkthrough animations. My workflow combines technical accuracy, realistic lighting, and cinematic composition to produce presentation-ready visualization outputs for architects, builders, and real-estate developers.
-      </p>
-      <div class="signature-line"></div>
-    </div>
-    <div class="card" style="background: #f5ede5;" data-aos="flip-left" data-aos-delay="200">
-      <i class="fa-solid fa-camera" style="font-size: 3rem; color: #b58b6b; margin-bottom: 1rem;"></i>
-      <h3 style="font-size: 2rem;">cinematic eye</h3>
-      <p>every render tells a story — light, texture, and emotion in perfect sync.</p>
-    </div>
-  </div>
-</section>
+    <section class="hero">
+        <div class="ambient-glow"></div>
 
-<!-- EXPERTISE / SPECIALIZATION -->
-<section class="section soft-highlight" id="expertise">
-  <h2 data-aos="fade-right">expertise</h2>
-  <div class="grid-4">
-    <div class="card" data-aos="zoom-in" data-aos-delay="0"><i class="fa-solid fa-building" style="font-size:2.5rem; color:#b58b6b;"></i><h3 style="font-size:2rem; margin:1rem 0 0.5rem;">Exterior</h3><p>Photorealistic building exterior renders for residential and commercial projects.</p></div>
-    <div class="card" data-aos="zoom-in" data-aos-delay="70"><i class="fa-solid fa-couch" style="font-size:2.5rem; color:#b58b6b;"></i><h3 style="font-size:2rem; margin:1rem 0 0.5rem;">Interior</h3><p>Realistic interior rendering with detailed lighting, materials, and furniture composition.</p></div>
-    <div class="card" data-aos="zoom-in" data-aos-delay="140"><i class="fa-solid fa-video" style="font-size:2.5rem; color:#b58b6b;"></i><h3 style="font-size:2rem; margin:1rem 0 0.5rem;">Animation</h3><p>Cinematic walkthroughs and flythrough animations for project presentations.</p></div>
-    <div class="card" data-aos="zoom-in" data-aos-delay="210"><i class="fa-solid fa-cube" style="font-size:2.5rem; color:#b58b6b;"></i><h3 style="font-size:2rem; margin:1rem 0 0.5rem;">3D Modeling</h3><p>Complete modeling, scene setup, lighting, texturing, and final render production.</p></div>
-  </div>
-</section>
+        <div class="container">
+            <div class="row align-items-center">
+                <!-- Text Content -->
+                <div class="col-lg-6">
+                    <span class="hero-subtitle">Portfolio 2026</span>
+                    <h1 class="hero-title">Midhun M<br><span>Architectural 3d visualizer</span></h1>
+                    <p class="hero-desc">
+                        Creating immersive visual narratives where light meets structural elegance. Specialized in
+                        high-fidelity 3D visualization and architectural aesthetics.
+                    </p>
+                    <div class="cta-wrapper">
+                        <a href="#" class="btn btn-gold me-3">View Projects</a>
+                        <a href="#contact" class="text-white text-decoration-none small hover-underline"
+                            style="letter-spacing: 1px;">Contact Me &rarr;</a>
+                    </div>
+                </div>
 
-<!-- PORTFOLIO section (animated cards) -->
-<section class="section" id="portfolio">
-  <h2 data-aos="fade-right">portfolio</h2>
-  <div class="portfolio-grid">
-    <!-- Residential Projects -->
-    <div class="port-item" data-aos="fade-up" data-aos-delay="0">
-      <i class="fa-solid fa-house"></i>
-      <h4>Residential</h4>
-      <p>exterior renders · modern & classic</p>
-    </div>
-    <!-- Commercial Projects -->
-    <div class="port-item" data-aos="fade-up" data-aos-delay="100">
-      <i class="fa-solid fa-building-flag"></i>
-      <h4>Commercial</h4>
-      <p>corporate · retail · mixed-use</p>
-    </div>
-    <!-- Interior Renders -->
-    <div class="port-item" data-aos="fade-up" data-aos-delay="200">
-      <i class="fa-solid fa-bed"></i>
-      <h4>Interior</h4>
-      <p>living · kitchen · spatial design</p>
-    </div>
-    <!-- Architectural Animations -->
-    <div class="port-item" data-aos="fade-up" data-aos-delay="300">
-      <i class="fa-solid fa-film"></i>
-      <h4>Animations</h4>
-      <p>walkthrough & flythrough</p>
-    </div>
-    <!-- 3D Modeling & Rendering (extra) -->
-    <div class="port-item" data-aos="fade-up" data-aos-delay="400">
-      <i class="fa-solid fa-shapes"></i>
-      <h4>3D Modeling</h4>
-      <p>detailed assets & scene assembly</p>
-    </div>
-  </div>
-  <p style="text-align:center; margin-top:3rem; font-style:italic; opacity:0.7;" data-aos="fade">* hover to feel the motion — each piece is a story.</p>
-</section>
+                <!-- Visual Content -->
+                <div class="col-lg-6">
+                    <div class="visual-element">
+                        <div class="floating-card card-back"></div>
+                        <div class="floating-card card-main"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<!-- EXPERIENCE & EDUCATION (side by side grid) -->
-<section class="section grid-2" style="gap: 4rem;">
-  <!-- left: experience -->
-  <div data-aos="fade-right">
-    <h2>experience</h2>
-    <div class="exp-item" data-aos="fade-up">
-      <h4>Senior 3D Visualizer</h4>
-      <p><strong>3DesignRoots, Palakkad</strong> · 2025 – Present</p>
-    </div>
-    <div class="exp-item" data-aos="fade-up" data-aos-delay="80">
-      <h4>RMC Site Supervisor</h4>
-      <p><strong>Nalakath Granites</strong> · 2023 – 2024</p>
-    </div>
-    <div class="exp-item" data-aos="fade-up" data-aos-delay="160">
-      <h4>Junior 3D Visualizer</h4>
-      <p><strong>DNotion, Mannarkkad</strong> · 2022 – 2023</p>
-    </div>
-  </div>
-  <!-- right: education -->
-  <div data-aos="fade-left">
-    <h2>education</h2>
-    <div class="card" style="background: #f5ede5;" data-aos="flip-right">
-      <i class="fa-solid fa-graduation-cap" style="color:#b58b6b; font-size:2rem;"></i>
-      <h3 style="font-size:1.9rem; margin: 1rem 0 0.5rem;">Professional Diploma</h3>
-      <p>Interior & Exterior Design – Govt. ITI</p>
-      <div style="height:1px; background:#e2cfbc; margin:1.2rem 0;"></div>
-      <h3 style="font-size:1.9rem; margin: 0.5rem 0;">Draughtsman Civil</h3>
-      <p>Govt. ITI</p>
-    </div>
-  </div>
-</section>
+        <div class="scroll-down">SCROLL</div>
+    </section>
 
-<!-- SOFTWARE SKILLS + CORE SKILLS combined animated -->
-<section class="section soft-highlight" id="skills">
-  <div class="grid-2" style="gap: 3rem;">
-    <!-- software -->
-    <div data-aos="fade-up">
-      <h2>software</h2>
-      <div>
-        <span class="skill-badge"><i class="fa-brands fa-autodesk" style="margin-right:6px;"></i>AutoCAD</span>
-        <span class="skill-badge">SketchUp</span>
-        <span class="skill-badge">3ds Max</span>
-        <span class="skill-badge">Revit</span>
-        <span class="skill-badge">Lumion</span>
-        <span class="skill-badge">V-Ray</span>
-      </div>
+    <!-- About Section -->
+    <section class="about-section" id="about">
+        <div class="container text-center">
+            <h2 class="about-heading">About Me</h2>
+            <div class="about-text">
+                <p>
+                    I am a <span class="text-gold">Senior Architectural 3D Visualizer</span> with professional
+                    experience in creating exterior renders, interior visualizations, and architectural walkthrough
+                    animations. My workflow combines technical accuracy, realistic lighting, and cinematic composition
+                    to produce presentation-ready visualization outputs for architects, builders, and real-estate
+                    developers.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Expertise Section -->
+    <section class="expertise-section">
+        <div class="container">
+            <h2 class="about-heading text-center mb-5">Specialization</h2>
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="expertise-card">
+                        <h3 class="expertise-title">Exterior Visualization</h3>
+                        <p class="expertise-text">Photorealistic building exterior renders for residential and
+                            commercial projects.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="expertise-card">
+                        <h3 class="expertise-title">Interior Visualization</h3>
+                        <p class="expertise-text">Realistic interior rendering with detailed lighting, materials, and
+                            furniture composition.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section class="portfolio-section" id="portfolio">
+        <div class="container">
+            <h2 class="about-heading text-center mb-5">Portfolio Highlights</h2>
+
+            <div class="row">
+                <!-- Item 1: Exterior -->
+                <div class="col-md-6">
+                    <div class="portfolio-item">
+                        <img src="./images/image1.jpeg" alt="Exterior Render" class="portfolio-img">
+                        <div class="portfolio-overlay">
+                            <span class="portfolio-cat">Exterior Renders</span>
+                            <h3 class="portfolio-name">Modern Residence</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 2: Commercial -->
+                <div class="col-md-6">
+                    <div class="portfolio-item">
+                        <img src="./images/image2.jpeg" alt="Commercial Project" class="portfolio-img">
+                        <div class="portfolio-overlay">
+                            <span class="portfolio-cat">Commercial Projects</span>
+                            <h3 class="portfolio-name">Skyline Tower</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 3: Interior -->
+                <div class="col-md-6">
+                    <div class="portfolio-item">
+                        <img src="./images/image3.jpeg" alt="Interior Render" class="portfolio-img">
+                        <div class="portfolio-overlay">
+                            <span class="portfolio-cat">Interior Renders</span>
+                            <h3 class="portfolio-name">Luxury Living</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 4: Residential -->
+                <div class="col-md-6">
+                    <div class="portfolio-item">
+                        <img src="./images/image5.jpeg" alt="Residential Project" class="portfolio-img">
+                        <div class="portfolio-overlay">
+                            <span class="portfolio-cat">Residential Projects</span>
+                            <h3 class="portfolio-name">Hillside Villa</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-5 cta-wrapper">
+                <a href="#" class="btn btn-gold">View Full Portfolio</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <!-- Experience Section -->
+    <section class="experience-section" id="experience">
+        <!-- Decoration shapes -->
+        <div class="experience-bg-shape" style="top: 10%; left: -100px;"></div>
+        <div class="experience-bg-shape" style="bottom: 10%; right: -100px;"></div>
+
+        <div class="container">
+            <h2 class="about-heading text-center mb-5">Experience</h2>
+
+            <div class="row g-4 justify-content-center">
+                <!-- Card 1 -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="exp-card">
+                        <div class="exp-year">2025</div>
+                        <div>
+                            <h3 class="exp-role">Senior 3D Visualizer</h3>
+                            <div class="exp-company">3DesignRoots</div>
+                        </div>
+                        <div class="exp-duration">
+                            <i class="far fa-clock"></i> Present
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="exp-card">
+                        <div class="exp-year">2023</div>
+                        <div>
+                            <h3 class="exp-role">RMC Site Supervisor</h3>
+                            <div class="exp-company">Nalakath Granites</div>
+                        </div>
+                        <div class="exp-duration">
+                            <i class="far fa-calendar-alt"></i> 2023 - 2024
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="exp-card">
+                        <div class="exp-year">2022</div>
+                        <div>
+                            <h3 class="exp-role">Junior 3D Visualizer</h3>
+                            <div class="exp-company">DNotion</div>
+                        </div>
+                        <div class="exp-duration">
+                            <i class="far fa-calendar-alt"></i> 2022 - 2023
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education Section -->
+    <section class="education-section">
+        <div class="container">
+            <h2 class="about-heading text-center mb-5">Education</h2>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <!-- Edu Item 1 -->
+                    <div class="edu-item">
+                        <div class="edu-icon"><i class="fas fa-graduation-cap"></i></div>
+                        <div>
+                            <h3 class="edu-title">Professional Diploma in Interior & Exterior Design</h3>
+                            <div class="edu-place">&nbsp;</div>
+                        </div>
+                    </div>
+
+                    <!-- Edu Item 2 -->
+                    <div class="edu-item">
+                        <div class="edu-icon"><i class="fas fa-drafting-compass"></i></div>
+                        <div>
+                            <h3 class="edu-title">Draughtsman Civil</h3>
+                            <div class="edu-place">Govt. ITI</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section class="skills-section" id="skills">
+        <div class="container">
+            <!-- Part 1: Core Skills -->
+            <div class="mb-5">
+                <h2 class="about-heading text-center mb-5">Core Skills</h2>
+                <div class="skills-grid">
+                    <div class="skill-tag">Architectural 3D Visualization</div>
+                    <div class="skill-tag">Exterior & Interior Rendering</div>
+                    <div class="skill-tag">Lighting and Material Setup</div>
+                    <div class="skill-tag">3D Modeling</div>
+                    <div class="skill-tag">Presentation Visualization</div>
+                    <div class="skill-tag">Technical Drawing & CAD Drafting</div>
+                    <div class="skill-tag">Team Coordination and Project Support</div>
+                </div>
+            </div>
+
+            <!-- Part 2: Software Skills -->
+            <div class="mt-5 pt-5">
+                <h2 class="about-heading text-center mb-5">Software Arsenal</h2>
+                <div class="container" style="max-width: 1000px;">
+                    <div class="software-grid">
+                        <!-- Card 1 -->
+                        <div class="holo-card" data-tilt>
+                            <div class="holo-shine"></div>
+                            <div class="holo-icon"><i class="fas fa-cube"></i></div>
+                            <div class="holo-name">SketchUp</div>
+                        </div>
+
+                        <!-- Card 2 -->
+                        <div class="holo-card" data-tilt>
+                            <div class="holo-shine"></div>
+                            <div class="holo-icon"><i class="fas fa-tree"></i></div>
+                            <div class="holo-name">Lumion</div>
+                        </div>
+
+                        <!-- Card 3 -->
+                        <div class="holo-card" data-tilt>
+                            <div class="holo-shine"></div>
+                            <div class="holo-icon"><i class="fas fa-desktop"></i></div>
+                            <div class="holo-name">D5 Render</div>
+                        </div>
+
+                        <!-- Card 4 -->
+                        <div class="holo-card" data-tilt>
+                            <div class="holo-shine"></div>
+                            <div class="holo-icon"><i class="fas fa-drafting-compass"></i></div>
+                            <div class="holo-name">AutoCAD</div>
+                        </div>
+
+                        <!-- Card 5 -->
+                        <div class="holo-card" data-tilt>
+                            <div class="holo-shine"></div>
+                            <div class="holo-icon"><i class="fas fa-layer-group"></i></div>
+                            <div class="holo-name">3ds Max</div>
+                        </div>
+
+                        <!-- Card 6 -->
+                        <div class="holo-card" data-tilt>
+                            <div class="holo-shine"></div>
+                            <div class="holo-icon"><i class="fas fa-building"></i></div>
+                            <div class="holo-name">Revit</div>
+                        </div>
+
+                        <!-- Card 7 -->
+                        <div class="holo-card" data-tilt>
+                            <div class="holo-shine"></div>
+                            <div class="holo-icon"><i class="fas fa-lightbulb"></i></div>
+                            <div class="holo-name">V-Ray</div>
+                        </div>
+                        <!-- Card 8 -->
+                        <div class="holo-card" data-tilt>
+                            <div class="holo-shine"></div>
+                            <div class="holo-icon"><i class="fas fa-edit"></i></div>
+                            <div class="holo-name">Photoshop</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </section>
+
     </div>
-    <!-- core skills -->
-    <div data-aos="fade-up" data-aos-delay="150">
-      <h2>core skills</h2>
-      <div>
-        <span class="skill-badge">Architectural 3D Visualization</span>
-        <span class="skill-badge">Exterior & Interior Rendering</span>
-        <span class="skill-badge">Lighting and Material Setup</span>
-        <span class="skill-badge">3D Modeling</span>
-        <span class="skill-badge">Presentation Visualization</span>
-        <span class="skill-badge">Technical Drawing & CAD Drafting</span>
-        <span class="skill-badge">Team Coordination & Project Support</span>
-      </div>
     </div>
-  </div>
-</section>
+    </section>
 
-<!-- CONTACT SECTION with animation & classic style -->
-<section class="section" id="contact">
-  <h2 data-aos="fade-right">contact</h2>
-  <div class="contact-bar" data-aos="zoom-in" data-aos-duration="800">
-    <div class="contact-item">
-      <i class="fa-solid fa-phone"></i>
-      <a href="tel:7907511825" style="text-decoration:none; color:inherit;">7907511825</a>
-    </div>
-    <div class="contact-item">
-      <i class="fa-solid fa-envelope"></i>
-      <a href="mailto:midhunnmanikandan@gmail.com" style="text-decoration:none; color:inherit;">midhunnmanikandan@gmail.com</a>
-    </div>
-    <div class="contact-item">
-      <i class="fa-solid fa-location-dot"></i>
-      <span>Palakkad, Kerala</span>
-    </div>
-  </div>
-  <!-- subtle extra animation line -->
-  <div style="text-align: center; margin-top: 3rem;">
-    <span style="border-bottom: 2px dotted #b58b6b; padding-bottom: 5px;">let's create something iconic</span>
-  </div>
-</section>
+    <!-- Contact Section -->
+    <section class="contact-section" id="contact">
+        <div class="container">
+            <h2 class="about-heading mb-5">Get in touch</h2>
 
-<!-- footer -->
-<footer>
-  <p>© 2025 Midhun M — Architectural 3D Visualizer · designed with motion & classic soul</p>
-</footer>
+            <div class="row justify-content-center">
+                <!-- Phone -->
+                <div class="col-md-4">
+                    <div class="contact-item">
+                        <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
+                        <span class="contact-label">Phone</span>
+                        <a href="tel:+917907511825" class="contact-value">7907511825</a>
+                    </div>
+                </div>
 
-<!-- AOS initialization + extra animation on window -->
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<script>
-  AOS.init({
-    duration: 1000,
-    once: false,
-    mirror: true,
-    offset: 60,
-    easing: 'ease-out-quart'
-  });
+                <!-- Email -->
+                <div class="col-md-4">
+                    <div class="contact-item">
+                        <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                        <span class="contact-label">Email</span>
+                        <a href="mailto:midhunnmanikandan@gmail.com"
+                            class="contact-value">midhunnmanikandan@gmail.com</a>
+                    </div>
+                </div>
 
-  // additional micro interaction: parallax-like floating background (optional)
-  window.addEventListener('mousemove', (e) => {
-    const spans = document.querySelectorAll('.float-bg span');
-    const x = e.clientX / window.innerWidth;
-    const y = e.clientY / window.innerHeight;
-    spans.forEach((span, i) => {
-      const speed = 20 + i * 10;
-      const moveX = (x - 0.5) * speed;
-      const moveY = (y - 0.5) * speed;
-      span.style.transform = `translate(${moveX}px, ${moveY}px)`;
-    });
-  });
-</script>
+                <!-- Location -->
+                <div class="col-md-4">
+                    <div class="contact-item">
+                        <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+                        <span class="contact-label">Location</span>
+                        <span class="contact-value">Palakkad, Kerala</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<!-- smooth internal link behavior -->
-<style>
-  html {
-    scroll-padding-top: 30px;
-  }
-  a[href^="#"] {
-    transition: 0.2s;
-  }
-  a[href^="#"]:hover {
-    background-color: #b58b6b !important;
-    color: white !important;
-    border-color: #b58b6b !important;
-  }
-</style>
+    <!-- Footer -->
+    <footer class="footer text-center">
+        <div class="container">
+            <p class="mb-0">&copy; 2026 Midhun M. All rights reserved.</p>
+        </div>
+    </footer>
 
+    <!-- jQuery & Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Sequence Animation on Load
+            const duration = 800;
+            const ease = 'swing';
+
+            // 1. Ambient Glow Fade In
+            $('.ambient-glow').animate({ opacity: 1 }, 2000);
+
+            // 2. Text Elements Fly In (Staggered)
+            setTimeout(() => {
+                $('.hero-subtitle').animate({ opacity: 1, marginTop: '0px' }, {
+                    duration: duration,
+                    step: function (now, fx) {
+                        if (fx.prop === 'marginTop') {
+                            $(this).css('transform', `translateY(${20 - (20 * fx.pos)}px)`);
+                        }
+                    },
+                    complete: function () { $(this).css('transform', 'none'); }
+                });
+            }, 300);
+
+            setTimeout(() => {
+                $('.hero-title').animate({ opacity: 1 }, {
+                    duration: duration,
+                    step: function (now, fx) {
+                        $(this).css('transform', `translateY(${30 - (30 * fx.pos)}px)`);
+                    },
+                    complete: function () { $(this).css('transform', 'none'); }
+                });
+            }, 500);
+
+            setTimeout(() => {
+                $('.hero-desc').animate({ opacity: 1 }, {
+                    duration: duration,
+                    step: function (now, fx) {
+                        $(this).css('transform', `translateY(${20 - (20 * fx.pos)}px)`);
+                    },
+                    complete: function () { $(this).css('transform', 'none'); }
+                });
+            }, 800);
+
+            setTimeout(() => {
+                $('.cta-wrapper').animate({ opacity: 1 }, {
+                    duration: duration,
+                    step: function (now, fx) {
+                        $(this).css('transform', `translateY(${20 - (20 * fx.pos)}px)`);
+                    },
+                    complete: function () { $(this).css('transform', 'none'); }
+                });
+            }, 1000);
+
+            // 3. Visual Element Fade In
+            setTimeout(() => {
+                $('.visual-element').animate({ opacity: 1 }, {
+                    duration: 1200,
+                    step: function (now, fx) {
+                        $(this).css('transform', `translateX(${30 - (30 * fx.pos)}px)`);
+                    },
+                    complete: function () { $(this).css('transform', 'none'); }
+                });
+            }, 600);
+
+            // 4. Scroll Indicator
+            setTimeout(() => {
+                $('.scroll-down').animate({ opacity: 0.7 }, 1000);
+            }, 1500);
+
+            // Mouse Move Parallax Effect for the Visual Element
+            $('.hero').on('mousemove', function (e) {
+                const moveX = (e.pageX * -1 / 60);
+                const moveY = (e.pageY * -1 / 60);
+                $('.visual-element').css('transform', `translate3d(${moveX}px, ${moveY}px, 0)`);
+            });
+
+            // Scroll Animation for About Section
+            $(window).scroll(function () {
+                var scroll = $(window).scrollTop();
+                var windowHeight = $(window).height();
+                var aboutSectionTop = $('.about-section').offset().top;
+
+                if (scroll > aboutSectionTop - windowHeight + 100) {
+                    $('.about-heading').addClass('reveal-visible');
+                    $('.about-text').addClass('reveal-visible');
+                }
+
+                // Expertise Reveal
+                var expertiseSectionTop = $('.expertise-section').offset().top;
+                if (scroll > expertiseSectionTop - windowHeight + 100) {
+                    $('.expertise-card').each(function (i) {
+                        var card = $(this);
+                        setTimeout(function () {
+                            card.addClass('reveal-visible');
+                            card.css('transform', 'translateY(0)'); // Explicit reset for simple hover override
+                        }, i * 200);
+                    });
+                }
+
+                // Portfolio Reveal
+                var portfolioSectionTop = $('.portfolio-section').offset().top;
+                if (scroll > portfolioSectionTop - windowHeight + 100) {
+                    $('.portfolio-item').each(function (i) {
+                        var item = $(this);
+                        setTimeout(function () {
+                            item.addClass('reveal-visible');
+                            item.css('transform', 'translateY(0)');
+                        }, i * 200);
+                    });
+                }
+
+                // Experience Reveal (Cards)
+                var experienceSectionTop = $('.experience-section').offset().top;
+                if (scroll > experienceSectionTop - windowHeight + 100) {
+                    $('.exp-card').each(function (i) {
+                        var item = $(this);
+                        // Initial state set via JS or CSS class, ensuring opacity 0 start
+                        item.css('opacity', '0').css('transform', 'translateY(30px)');
+
+                        setTimeout(function () {
+                            item.css('transition', 'all 0.6s ease'); // Add transition dynamically
+                            item.css('opacity', '1').css('transform', 'translateY(0)');
+                        }, i * 200);
+                    });
+                }
+
+                // Education Reveal
+                var eduSectionTop = $('.education-section').offset().top;
+                if (scroll > eduSectionTop - windowHeight + 100) {
+                    $('.edu-item').each(function (i) {
+                        var item = $(this);
+                        setTimeout(function () {
+                            item.css('opacity', '1').css('transform', 'translateY(0)');
+                        }, i * 200);
+                    });
+                }
+
+                // Skills Reveal
+                var skillsSectionTop = $('.skills-section').offset().top;
+                if (scroll > skillsSectionTop - windowHeight + 100) {
+                    $('.skill-tag').each(function (i) {
+                        var item = $(this);
+                        item.css('opacity', '0').css('transform', 'translateY(20px)'); // Ensure initial state
+
+                        setTimeout(function () {
+                            item.css('opacity', '1').css('transform', 'translateY(0)');
+                        }, i * 100);
+                    });
+                    // Reveal grid items
+                    $('.holo-card').each(function (i) {
+                        var item = $(this);
+                        item.css('opacity', '0').css('transform', 'translateY(30px)');
+                        setTimeout(function () {
+                            item.css('opacity', '1').css('transform', 'translateY(0)');
+                        }, i * 150);
+                    });
+                }
+
+                // Contact Reveal
+                var contactSectionTop = $('.contact-section').offset().top;
+                if (scroll > contactSectionTop - windowHeight + 100) {
+                    $('.contact-item').each(function (i) {
+                        var item = $(this);
+                        setTimeout(function () {
+                            item.css('opacity', '1').css('transform', 'translateY(0)');
+                        }, i * 200);
+                    });
+                }
+            });
+
+            // 3D Tilt Effect Logic
+            $('.holo-card').mousemove(function (e) {
+                var card = $(this);
+                var offset = card.offset();
+                var width = card.outerWidth();
+                var height = card.outerHeight();
+
+                var mouseX = e.pageX - offset.left;
+                var mouseY = e.pageY - offset.top;
+
+                var xPct = mouseX / width - 0.5;
+                var yPct = mouseY / height - 0.5;
+
+                // Rotate vector
+                var rotateX = yPct * -25; // Max rotation deg
+                var rotateY = xPct * 25;
+
+                card.css('transform', `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`);
+            });
+
+            $('.holo-card').mouseleave(function () {
+                var card = $(this);
+                card.css('transform', 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)');
+            });
+
+            // Smooth Scrolling
+            $('a[href^="#"]').on('click', function (e) {
+                e.preventDefault();
+                var target = this.hash;
+                var $target = $(target);
+                $('html, body').stop().animate({
+                    'scrollTop': $target.offset().top - 100
+                }, 900, 'swing', function () {
+                    window.location.hash = target;
+                });
+            });
+
+            // Highlight Nav on Scroll
+            $(window).scroll(function () {
+                var scrollDistance = $(window).scrollTop() + 150;
+                $('.nav-link-custom').removeClass('active');
+                $('section').each(function (i) {
+                    if ($(this).position().top <= scrollDistance) {
+                        $('.nav-link-custom').removeClass('active');
+                        $('.nav-link-custom').eq(i).addClass('active');
+                    }
+                });
+                // Fix for Home usually being 0
+                if (scrollDistance < 300) {
+                    $('.nav-link-custom').removeClass('active');
+                    $('.nav-link-custom').first().addClass('active');
+                }
+            });
+
+        });
+    </script>
 </body>
+
 </html>
