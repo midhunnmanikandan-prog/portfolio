@@ -1283,131 +1283,153 @@
                 $('.scroll-down').animate({ opacity: 0.7 }, 1000);
             }, 1500);
 
-            // Mouse Move Parallax Effect for the Visual Element
-            $('.hero').on('mousemove', function (e) {
-                const moveX = (e.pageX * -1 / 60);
-                const moveY = (e.pageY * -1 / 60);
-                $('.visual-element').css('transform', `translate3d(${moveX}px, ${moveY}px, 0)`);
-            });
+            // Mouse Move Parallax Effect for the Visual Element (Disable on touch)
+            if (window.matchMedia("(hover: hover)").matches) {
+                $('.hero').on('mousemove', function (e) {
+                    const moveX = (e.pageX * -1 / 60);
+                    const moveY = (e.pageY * -1 / 60);
+                    $('.visual-element').css('transform', `translate3d(${moveX}px, ${moveY}px, 0)`);
+                });
+            }
 
             // Scroll Animation for About Section
             $(window).scroll(function () {
                 var scroll = $(window).scrollTop();
                 var windowHeight = $(window).height();
-                var aboutSectionTop = $('.about-section').offset().top;
 
+                // About Reveal
+                var aboutSectionTop = $('.about-section').offset().top;
                 if (scroll > aboutSectionTop - windowHeight + 100) {
-                    $('.about-heading').addClass('reveal-visible');
-                    $('.about-text').addClass('reveal-visible');
+                    if (!$('.about-section').hasClass('animated')) {
+                        $('.about-section').addClass('animated');
+                        $('.about-heading').addClass('reveal-visible');
+                        $('.about-text').addClass('reveal-visible');
+                    }
                 }
 
                 // Expertise Reveal
                 var expertiseSectionTop = $('.expertise-section').offset().top;
                 if (scroll > expertiseSectionTop - windowHeight + 100) {
-                    $('.expertise-card').each(function (i) {
-                        var card = $(this);
-                        setTimeout(function () {
-                            card.addClass('reveal-visible');
-                            card.css('transform', 'translateY(0)'); // Explicit reset for simple hover override
-                        }, i * 200);
-                    });
+                    if (!$('.expertise-section').hasClass('animated')) {
+                        $('.expertise-section').addClass('animated');
+                        $('.expertise-card').each(function (i) {
+                            var card = $(this);
+                            setTimeout(function () {
+                                card.addClass('reveal-visible');
+                                card.css('transform', 'translateY(0)');
+                            }, i * 200);
+                        });
+                    }
                 }
 
                 // Portfolio Reveal
                 var portfolioSectionTop = $('.portfolio-section').offset().top;
                 if (scroll > portfolioSectionTop - windowHeight + 100) {
-                    $('.portfolio-item').each(function (i) {
-                        var item = $(this);
-                        setTimeout(function () {
-                            item.addClass('reveal-visible');
-                            item.css('transform', 'translateY(0)');
-                        }, i * 200);
-                    });
+                    if (!$('.portfolio-section').hasClass('animated')) {
+                        $('.portfolio-section').addClass('animated');
+                        $('.portfolio-item').each(function (i) {
+                            var item = $(this);
+                            setTimeout(function () {
+                                item.addClass('reveal-visible');
+                                item.css('transform', 'translateY(0)');
+                            }, i * 200);
+                        });
+                    }
                 }
 
                 // Experience Reveal (Cards)
                 var experienceSectionTop = $('.experience-section').offset().top;
                 if (scroll > experienceSectionTop - windowHeight + 100) {
-                    $('.exp-card').each(function (i) {
-                        var item = $(this);
-                        // Initial state set via JS or CSS class, ensuring opacity 0 start
-                        item.css('opacity', '0').css('transform', 'translateY(30px)');
-
-                        setTimeout(function () {
-                            item.css('transition', 'all 0.6s ease'); // Add transition dynamically
-                            item.css('opacity', '1').css('transform', 'translateY(0)');
-                        }, i * 200);
-                    });
+                    if (!$('.experience-section').hasClass('animated')) {
+                        $('.experience-section').addClass('animated');
+                        $('.exp-card').each(function (i) {
+                            var item = $(this);
+                            // Initial state is set in CSS/JS before this, but we only want to trigger the transition once
+                            setTimeout(function () {
+                                item.css('opacity', '1').css('transform', 'translateY(0)');
+                            }, i * 200);
+                        });
+                    }
                 }
 
                 // Education Reveal
                 var eduSectionTop = $('.education-section').offset().top;
                 if (scroll > eduSectionTop - windowHeight + 100) {
-                    $('.edu-item').each(function (i) {
-                        var item = $(this);
-                        setTimeout(function () {
-                            item.css('opacity', '1').css('transform', 'translateY(0)');
-                        }, i * 200);
-                    });
+                    if (!$('.education-section').hasClass('animated')) {
+                        $('.education-section').addClass('animated');
+                        $('.edu-item').each(function (i) {
+                            var item = $(this);
+                            setTimeout(function () {
+                                item.css('opacity', '1').css('transform', 'translateY(0)');
+                            }, i * 200);
+                        });
+                    }
                 }
 
                 // Skills Reveal
                 var skillsSectionTop = $('.skills-section').offset().top;
                 if (scroll > skillsSectionTop - windowHeight + 100) {
-                    $('.skill-tag').each(function (i) {
-                        var item = $(this);
-                        item.css('opacity', '0').css('transform', 'translateY(20px)'); // Ensure initial state
+                    if (!$('.skills-section').hasClass('animated')) {
+                        $('.skills-section').addClass('animated');
 
-                        setTimeout(function () {
-                            item.css('opacity', '1').css('transform', 'translateY(0)');
-                        }, i * 100);
-                    });
-                    // Reveal grid items
-                    $('.holo-card').each(function (i) {
-                        var item = $(this);
-                        item.css('opacity', '0').css('transform', 'translateY(30px)');
-                        setTimeout(function () {
-                            item.css('opacity', '1').css('transform', 'translateY(0)');
-                        }, i * 150);
-                    });
+                        $('.skill-tag').each(function (i) {
+                            var item = $(this);
+                            setTimeout(function () {
+                                item.css('opacity', '1').css('transform', 'translateY(0)');
+                            }, i * 100);
+                        });
+
+                        // Reveal grid items
+                        $('.holo-card').each(function (i) {
+                            var item = $(this);
+                            setTimeout(function () {
+                                item.css('opacity', '1').css('transform', 'translateY(0)');
+                            }, i * 150);
+                        });
+                    }
                 }
 
                 // Contact Reveal
                 var contactSectionTop = $('.contact-section').offset().top;
                 if (scroll > contactSectionTop - windowHeight + 100) {
-                    $('.contact-item').each(function (i) {
-                        var item = $(this);
-                        setTimeout(function () {
-                            item.css('opacity', '1').css('transform', 'translateY(0)');
-                        }, i * 200);
-                    });
+                    if (!$('.contact-section').hasClass('animated')) {
+                        $('.contact-section').addClass('animated');
+                        $('.contact-item').each(function (i) {
+                            var item = $(this);
+                            setTimeout(function () {
+                                item.css('opacity', '1').css('transform', 'translateY(0)');
+                            }, i * 200);
+                        });
+                    }
                 }
             });
 
-            // 3D Tilt Effect Logic
-            $('.holo-card').mousemove(function (e) {
-                var card = $(this);
-                var offset = card.offset();
-                var width = card.outerWidth();
-                var height = card.outerHeight();
+            // 3D Tilt Effect Logic (Disable on touch)
+            if (window.matchMedia("(hover: hover)").matches) {
+                $('.holo-card').mousemove(function (e) {
+                    var card = $(this);
+                    var offset = card.offset();
+                    var width = card.outerWidth();
+                    var height = card.outerHeight();
 
-                var mouseX = e.pageX - offset.left;
-                var mouseY = e.pageY - offset.top;
+                    var mouseX = e.pageX - offset.left;
+                    var mouseY = e.pageY - offset.top;
 
-                var xPct = mouseX / width - 0.5;
-                var yPct = mouseY / height - 0.5;
+                    var xPct = mouseX / width - 0.5;
+                    var yPct = mouseY / height - 0.5;
 
-                // Rotate vector
-                var rotateX = yPct * -25; // Max rotation deg
-                var rotateY = xPct * 25;
+                    // Rotate vector
+                    var rotateX = yPct * -25; // Max rotation deg
+                    var rotateY = xPct * 25;
 
-                card.css('transform', `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`);
-            });
+                    card.css('transform', `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`);
+                });
 
-            $('.holo-card').mouseleave(function () {
-                var card = $(this);
-                card.css('transform', 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)');
-            });
+                $('.holo-card').mouseleave(function () {
+                    var card = $(this);
+                    card.css('transform', 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)');
+                });
+            }
 
             // Smooth Scrolling
             $('a[href^="#"]').on('click', function (e) {
