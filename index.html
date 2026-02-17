@@ -32,6 +32,50 @@
             color: var(--text-white);
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
+            overflow-y: hidden;
+            /* Hide scroll until loaded */
+        }
+
+        /* Loader Styles */
+        #loader-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-dark);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+        }
+
+        .loader-svg {
+            width: 150px;
+            height: 150px;
+        }
+
+        .loader-path {
+            fill: none;
+            stroke: var(--text-gold);
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: draw 2s ease-in-out forwards;
+        }
+
+        @keyframes draw {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        .loader-fade-out {
+            opacity: 0;
+            visibility: hidden;
         }
 
         h1,
@@ -423,6 +467,7 @@
             background-color: #0f1115;
             position: relative;
             z-index: 1;
+            overflow: hidden;
         }
 
         /* Abstract BG shapes for glassmorphism context */
@@ -519,39 +564,174 @@
             align-items: center;
         }
 
-        .edu-item {
+        /* Education Section */
+        .education-section {
+            padding: 100px 0;
+            background-color: #12141a;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .education-section::before {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(197, 164, 126, 0.06) 0%, transparent 70%);
+            top: -100px;
+            right: -100px;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .edu-timeline {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Vertical timeline line */
+        .edu-timeline::before {
+            content: '';
+            position: absolute;
+            left: 30px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, transparent, var(--text-gold), transparent);
+            opacity: 0.3;
+        }
+
+        .edu-card {
+            position: relative;
+            margin-left: 70px;
+            background: rgba(22, 25, 31, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 35px 30px 30px;
             opacity: 0;
-            transform: translateY(20px);
-            padding-left: 10px;
-            transition: all 0.5s ease;
+            transform: translateY(25px);
+            transition: opacity 0.6s ease, transform 0.6s ease, border-color 0.4s ease, box-shadow 0.4s ease;
         }
 
-        .edu-item:hover {
-            border-left: 3px solid var(--text-gold);
-            padding-left: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            transform: translateX(10px) !important;
+        .edu-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            border-radius: 16px 16px 0 0;
+            background: linear-gradient(90deg, var(--text-gold), rgba(197, 164, 126, 0.2), transparent);
         }
 
-        .edu-icon {
-            font-size: 2.5rem;
+        .edu-card:hover {
+            border-color: rgba(197, 164, 126, 0.25);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(197, 164, 126, 0.05);
+            transform: translateY(-5px) !important;
+        }
+
+        /* Timeline dot */
+        .edu-dot {
+            position: absolute;
+            left: -52px;
+            top: 30px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--bg-dark);
+            border: 2px solid var(--text-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 12px rgba(197, 164, 126, 0.3);
+            z-index: 2;
+        }
+
+        .edu-dot::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-gold);
+        }
+
+        .edu-icon-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: rgba(197, 164, 126, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 18px;
+            font-size: 1.4rem;
             color: var(--text-gold);
-            margin-right: 25px;
-            opacity: 0.8;
+            transition: all 0.3s ease;
+        }
+
+        .edu-card:hover .edu-icon-circle {
+            background: rgba(197, 164, 126, 0.2);
+            transform: scale(1.05);
         }
 
         .edu-title {
-            font-size: 1.4rem;
+            font-size: 1.35rem;
             color: var(--text-white);
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             font-family: 'Playfair Display', serif;
+            line-height: 1.3;
         }
 
         .edu-place {
-            color: var(--text-muted);
-            font-size: 1rem;
-            letter-spacing: 1px;
+            color: var(--text-gold);
+            font-size: 0.85rem;
+            letter-spacing: 1.5px;
             text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .edu-year {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 5px 14px;
+            border-radius: 50px;
+            background: rgba(197, 164, 126, 0.08);
+            border: 1px solid rgba(197, 164, 126, 0.15);
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 576px) {
+            .edu-timeline::before {
+                left: 15px;
+            }
+
+            .edu-card {
+                margin-left: 45px;
+                padding: 25px 20px 20px;
+            }
+
+            .edu-dot {
+                left: -40px;
+                width: 20px;
+                height: 20px;
+            }
+
+            .edu-dot::after {
+                width: 6px;
+                height: 6px;
+            }
+
+            .edu-title {
+                font-size: 1.15rem;
+            }
         }
 
         /* Skills Section */
@@ -706,6 +886,29 @@
             opacity: 1;
         }
 
+        @media (max-width: 576px) {
+            .software-grid {
+                gap: 12px;
+                padding: 10px;
+            }
+
+            .holo-card {
+                /* Force 2 columns: 50% width minus half the gap */
+                flex: 0 0 calc(50% - 6px);
+                min-width: 0;
+                padding: 20px 10px;
+            }
+
+            .holo-icon {
+                font-size: 2rem;
+                margin-bottom: 10px;
+            }
+
+            .holo-name {
+                font-size: 0.85rem;
+            }
+        }
+
         /* Contact Section */
         .contact-section {
             padding: 100px 0;
@@ -830,10 +1033,20 @@
                 gap: 20px;
                 width: 90%;
                 justify-content: center;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+
+            .navbar-custom::-webkit-scrollbar {
+                display: none;
             }
 
             .nav-link-custom {
                 font-size: 0.8rem;
+                white-space: nowrap;
+                flex-shrink: 0;
             }
         }
 
@@ -843,19 +1056,152 @@
                 bottom: 20px;
                 /* Move to bottom for mobile reachability */
                 width: 95%;
-                gap: 15px;
-                padding: 12px 15px;
+                gap: 12px;
+                padding: 10px 15px;
+                justify-content: space-between;
             }
 
             .nav-link-custom {
-                font-size: 0.7rem;
+                font-size: 0.65rem;
                 letter-spacing: 0;
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+        }
+
+        /* Comprehensive Mobile Typography & Alignment Fixes */
+        @media (max-width: 768px) {
+
+            h1,
+            .hero-title {
+                font-size: 3rem;
+            }
+
+            .hero-title span {
+                font-size: 2.2rem;
+            }
+
+            .about-heading {
+                font-size: 2.5rem;
+            }
+
+            section {
+                padding: 80px 0;
+            }
+        }
+
+        @media (max-width: 576px) {
+
+            /* General Typography Scaling */
+            h1,
+            .hero-title {
+                font-size: 2.2rem;
+                line-height: 1.2;
+                margin-bottom: 1rem;
+            }
+
+            .hero-title span {
+                font-size: 1.6rem;
+                display: block;
+                margin-top: 5px;
+            }
+
+            .hero-desc {
+                font-size: 1rem;
+                line-height: 1.6;
+                padding: 0 10px;
+            }
+
+            .about-heading {
+                font-size: 2rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .about-text {
+                font-size: 1rem;
+                padding: 0 10px;
+                text-align: justify;
+            }
+
+            /* Section Titles & Cards */
+            .contact-value {
+                font-size: 1.2rem;
+                word-break: break-all;
+            }
+
+            .contact-icon {
+                width: 60px;
+                height: 60px;
+                line-height: 60px;
+                font-size: 1.5rem;
+            }
+
+            .exp-year {
+                font-size: 2.5rem;
+                top: 10px;
+                right: 10px;
+                opacity: 0.1;
+            }
+
+            .exp-role {
+                font-size: 1.3rem;
+                margin-bottom: 2px;
+            }
+
+            .exp-company {
+                font-size: 0.9rem;
+                margin-bottom: 10px;
+            }
+
+            .expertise-title {
+                font-size: 1.4rem;
+            }
+
+            .portfolio-name {
+                font-size: 1.4rem;
+            }
+
+            /* Spacing adjustments to reduce scroll length */
+            .section,
+            .about-section,
+            .expertise-section,
+            .portfolio-section,
+            .experience-section,
+            .education-section,
+            .skills-section,
+            .contact-section {
+                padding: 50px 0;
+            }
+
+            .container {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+
+            /* Button adjustments */
+            .btn-gold {
+                padding: 10px 25px;
+                font-size: 0.8rem;
+            }
+
+            /* Alignments */
+            .text-center-mobile {
+                text-align: center !important;
             }
         }
     </style>
 </head>
 
-<body id="home" data-bs-spy="scroll" data-bs-target="#navbar-custom" data-bs-offset="100" tabindex="0">
+<body id="home" tabindex="0">
+
+    <!-- Preloader -->
+    <div id="loader-wrapper">
+        <svg class="loader-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <!-- Simple House Line Art -->
+            <path class="loader-path"
+                d="M10 50 L10 90 L90 90 L90 50 L50 10 Z M35 90 L35 60 L65 60 L65 90 M50 25 L50 40 M15 50 L85 50" />
+        </svg>
+    </div>
 
     <!-- Navigation -->
     <nav class="navbar-custom" id="navbar-custom">
@@ -900,44 +1246,48 @@
         <div class="scroll-down">SCROLL</div>
     </section>
 
-    <!-- About Section -->
-    <section class="about-section" id="about">
-        <div class="container text-center">
-            <h2 class="about-heading">About Me</h2>
-            <div class="about-text">
-                <p>
-                    I am a <span class="text-gold">Senior Architectural 3D Visualizer</span> with professional
-                    experience in creating exterior renders, interior visualizations, and architectural walkthrough
-                    animations. My workflow combines technical accuracy, realistic lighting, and cinematic composition
-                    to produce presentation-ready visualization outputs for architects, builders, and real-estate
-                    developers.
-                </p>
+    <!-- About & Specialization Section -->
+    <div id="about">
+        <section class="about-section">
+            <div class="container text-center">
+                <h2 class="about-heading">About Me</h2>
+                <div class="about-text">
+                    <p>
+                        I am a <span class="text-gold">Senior Architectural 3D Visualizer</span> with professional
+                        experience in creating exterior renders, interior visualizations, and architectural walkthrough
+                        animations. My workflow combines technical accuracy, realistic lighting, and cinematic
+                        composition
+                        to produce presentation-ready visualization outputs for architects, builders, and real-estate
+                        developers.
+                    </p>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Expertise Section -->
-    <section class="expertise-section">
-        <div class="container">
-            <h2 class="about-heading text-center mb-5">Specialization</h2>
-            <div class="row g-4">
-                <div class="col-md-6">
-                    <div class="expertise-card">
-                        <h3 class="expertise-title">Exterior Visualization</h3>
-                        <p class="expertise-text">Photorealistic building exterior renders for residential and
-                            commercial projects.</p>
+        <!-- Expertise Section -->
+        <section class="expertise-section">
+            <div class="container">
+                <h2 class="about-heading text-center mb-5">Specialization</h2>
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="expertise-card">
+                            <h3 class="expertise-title">Exterior Visualization</h3>
+                            <p class="expertise-text">Photorealistic building exterior renders for residential and
+                                commercial projects.</p>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="expertise-card">
-                        <h3 class="expertise-title">Interior Visualization</h3>
-                        <p class="expertise-text">Realistic interior rendering with detailed lighting, materials, and
-                            furniture composition.</p>
+                    <div class="col-md-6">
+                        <div class="expertise-card">
+                            <h3 class="expertise-title">Interior Visualization</h3>
+                            <p class="expertise-text">Realistic interior rendering with detailed lighting, materials,
+                                and
+                                furniture composition.</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </div>
 
     <!-- Portfolio Section -->
     <section class="portfolio-section" id="portfolio">
@@ -996,89 +1346,94 @@
         </div>
     </section>
 
-    <!-- Experience Section -->
-    <!-- Experience Section -->
-    <section class="experience-section" id="experience">
-        <!-- Decoration shapes -->
-        <div class="experience-bg-shape" style="top: 10%; left: -100px;"></div>
-        <div class="experience-bg-shape" style="bottom: 10%; right: -100px;"></div>
+    <!-- Experience & Education Section -->
+    <div id="experience">
+        <!-- Experience Section -->
+        <section class="experience-section">
+            <!-- Decoration shapes -->
+            <div class="experience-bg-shape" style="top: 10%; left: -100px;"></div>
+            <div class="experience-bg-shape" style="bottom: 10%; right: -100px;"></div>
 
-        <div class="container">
-            <h2 class="about-heading text-center mb-5">Experience</h2>
+            <div class="container">
+                <h2 class="about-heading text-center mb-5">Experience</h2>
 
-            <div class="row g-4 justify-content-center">
-                <!-- Card 1 -->
-                <div class="col-lg-4 col-md-6">
-                    <div class="exp-card">
-                        <div class="exp-year">2025</div>
-                        <div>
-                            <h3 class="exp-role">Senior 3D Visualizer</h3>
-                            <div class="exp-company">3DesignRoots</div>
-                        </div>
-                        <div class="exp-duration">
-                            <i class="far fa-clock"></i> Present
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="col-lg-4 col-md-6">
-                    <div class="exp-card">
-                        <div class="exp-year">2023</div>
-                        <div>
-                            <h3 class="exp-role">RMC Site Supervisor</h3>
-                            <div class="exp-company">Nalakath Granites</div>
-                        </div>
-                        <div class="exp-duration">
-                            <i class="far fa-calendar-alt"></i> 2023 - 2024
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="col-lg-4 col-md-6">
-                    <div class="exp-card">
-                        <div class="exp-year">2022</div>
-                        <div>
-                            <h3 class="exp-role">Junior 3D Visualizer</h3>
-                            <div class="exp-company">DNotion</div>
-                        </div>
-                        <div class="exp-duration">
-                            <i class="far fa-calendar-alt"></i> 2022 - 2023
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Education Section -->
-    <section class="education-section">
-        <div class="container">
-            <h2 class="about-heading text-center mb-5">Education</h2>
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <!-- Edu Item 1 -->
-                    <div class="edu-item">
-                        <div class="edu-icon"><i class="fas fa-graduation-cap"></i></div>
-                        <div>
-                            <h3 class="edu-title">Professional Diploma in Interior & Exterior Design</h3>
-                            <div class="edu-place">&nbsp;</div>
+                <div class="row g-4 justify-content-center">
+                    <!-- Card 1 -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="exp-card">
+                            <div class="exp-year">2025</div>
+                            <div>
+                                <h3 class="exp-role">Senior 3D Visualizer</h3>
+                                <div class="exp-company">3DesignRoots</div>
+                            </div>
+                            <div class="exp-duration">
+                                <i class="far fa-clock"></i> &nbsp;Present
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Edu Item 2 -->
-                    <div class="edu-item">
-                        <div class="edu-icon"><i class="fas fa-drafting-compass"></i></div>
-                        <div>
-                            <h3 class="edu-title">Draughtsman Civil</h3>
-                            <div class="edu-place">Govt. ITI</div>
+                    <!-- Card 2 -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="exp-card">
+                            <div class="exp-year">2023</div>
+                            <div>
+                                <h3 class="exp-role">RMC Site Supervisor</h3>
+                                <div class="exp-company">Nalakath Granites</div>
+                            </div>
+                            <div class="exp-duration">
+                                <i class="far fa-calendar-alt"></i> &nbsp;2023 - 2024
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="exp-card">
+                            <div class="exp-year">2022</div>
+                            <div>
+                                <h3 class="exp-role">Junior 3D Visualizer</h3>
+                                <div class="exp-company">DNotion</div>
+                            </div>
+                            <div class="exp-duration">
+                                <i class="far fa-calendar-alt"></i> &nbsp;2022 - 2023
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+
+        <!-- Education Section -->
+        <section class="education-section">
+            <div class="container">
+                <h2 class="about-heading text-center mb-5">Education</h2>
+
+                <div class="edu-timeline">
+                    <!-- Edu Card 1 -->
+                    <div class="edu-card">
+                        <div class="edu-dot"></div>
+                        <div class="edu-icon-circle">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h3 class="edu-title">Professional Diploma in Interior & Exterior Design</h3>
+                        <div class="edu-place">Specialized Training</div>
+                        <span class="edu-year"><i class="far fa-calendar-alt"></i>&nbsp; Completed</span>
+                    </div>
+
+                    <!-- Edu Card 2 -->
+                    <div class="edu-card">
+                        <div class="edu-dot"></div>
+                        <div class="edu-icon-circle">
+                            <i class="fas fa-drafting-compass"></i>
+                        </div>
+                        <h3 class="edu-title">Draughtsman Civil</h3>
+                        <div class="edu-place">Govt. ITI</div>
+                        <span class="edu-year"><i class="far fa-calendar-alt"></i>&nbsp; Certified</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
 
     <!-- Skills Section -->
     <section class="skills-section" id="skills">
@@ -1160,11 +1515,6 @@
                 </div>
             </div>
         </div>
-        </div>
-    </section>
-
-    </div>
-    </div>
     </section>
 
     <!-- Contact Section -->
@@ -1216,72 +1566,26 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
+        $(window).on('load', function () {
+            // Hide Loader
+            setTimeout(function () {
+                $('#loader-wrapper').addClass('loader-fade-out');
+                $('body').css('overflow-y', 'auto'); // Re-enable scroll
+
+                // Trigger Hero Animations
+                setTimeout(function () {
+                    $('.ambient-glow').css({ 'opacity': '1', 'transition': 'opacity 2s ease' });
+                    $('.hero-subtitle').css({ 'opacity': '1', 'transform': 'translateY(0)', 'transition': 'all 0.8s ease-out' });
+                    $('.hero-title').css({ 'opacity': '1', 'transform': 'translateY(0)', 'transition': 'all 0.8s ease-out 0.2s' });
+                    $('.hero-desc').css({ 'opacity': '1', 'transform': 'translateY(0)', 'transition': 'all 0.8s ease-out 0.4s' });
+                    $('.cta-wrapper').css({ 'opacity': '1', 'transform': 'translateY(0)', 'transition': 'all 0.8s ease-out 0.6s' });
+                    $('.visual-element').css({ 'opacity': '1', 'transform': 'translateX(0)', 'transition': 'all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.4s' });
+                    $('.scroll-down').css({ 'opacity': '1', 'transition': 'opacity 1s ease 1.2s' });
+                }, 500); // Small delay after loader fade
+            }, 2000); // Wait for drawing animation (2s)
+        });
+
         $(document).ready(function () {
-            // Sequence Animation on Load
-            const duration = 800;
-            const ease = 'swing';
-
-            // 1. Ambient Glow Fade In
-            $('.ambient-glow').animate({ opacity: 1 }, 2000);
-
-            // 2. Text Elements Fly In (Staggered)
-            setTimeout(() => {
-                $('.hero-subtitle').animate({ opacity: 1, marginTop: '0px' }, {
-                    duration: duration,
-                    step: function (now, fx) {
-                        if (fx.prop === 'marginTop') {
-                            $(this).css('transform', `translateY(${20 - (20 * fx.pos)}px)`);
-                        }
-                    },
-                    complete: function () { $(this).css('transform', 'none'); }
-                });
-            }, 300);
-
-            setTimeout(() => {
-                $('.hero-title').animate({ opacity: 1 }, {
-                    duration: duration,
-                    step: function (now, fx) {
-                        $(this).css('transform', `translateY(${30 - (30 * fx.pos)}px)`);
-                    },
-                    complete: function () { $(this).css('transform', 'none'); }
-                });
-            }, 500);
-
-            setTimeout(() => {
-                $('.hero-desc').animate({ opacity: 1 }, {
-                    duration: duration,
-                    step: function (now, fx) {
-                        $(this).css('transform', `translateY(${20 - (20 * fx.pos)}px)`);
-                    },
-                    complete: function () { $(this).css('transform', 'none'); }
-                });
-            }, 800);
-
-            setTimeout(() => {
-                $('.cta-wrapper').animate({ opacity: 1 }, {
-                    duration: duration,
-                    step: function (now, fx) {
-                        $(this).css('transform', `translateY(${20 - (20 * fx.pos)}px)`);
-                    },
-                    complete: function () { $(this).css('transform', 'none'); }
-                });
-            }, 1000);
-
-            // 3. Visual Element Fade In
-            setTimeout(() => {
-                $('.visual-element').animate({ opacity: 1 }, {
-                    duration: 1200,
-                    step: function (now, fx) {
-                        $(this).css('transform', `translateX(${30 - (30 * fx.pos)}px)`);
-                    },
-                    complete: function () { $(this).css('transform', 'none'); }
-                });
-            }, 600);
-
-            // 4. Scroll Indicator
-            setTimeout(() => {
-                $('.scroll-down').animate({ opacity: 0.7 }, 1000);
-            }, 1500);
 
             // Mouse Move Parallax Effect for the Visual Element (Disable on touch)
             if (window.matchMedia("(hover: hover)").matches) {
@@ -1293,9 +1597,54 @@
             }
 
             // Scroll Animation for About Section
+            // Smooth Scrolling for Nav Links
+            $('a[href^="#"]').on('click', function (e) {
+                e.preventDefault();
+                var target = this.hash;
+                var $target = $(target);
+                if ($target.length) {
+                    $('html, body').stop().animate({
+                        'scrollTop': $target.offset().top - 85
+                    }, 800, 'swing');
+                }
+            });
+
+            // Scroll Animation & Spy
             $(window).scroll(function () {
                 var scroll = $(window).scrollTop();
                 var windowHeight = $(window).height();
+                var docHeight = $(document).height();
+
+                // Active nav link highlight
+                var navLinks = $('.nav-link-custom');
+                // Use center of viewport (0.5) as trigger point for better UX
+                var triggerPoint = scroll + windowHeight * 0.5;
+                var currentSection = '#home';
+
+                // Force "Contact" active if at bottom of page
+                if (scroll + windowHeight >= docHeight - 50) {
+                    currentSection = '#contact';
+                } else {
+                    var sections = [
+                        { href: '#home', el: $('.hero') },
+                        { href: '#about', el: $('#about') },
+                        { href: '#portfolio', el: $('#portfolio') },
+                        { href: '#experience', el: $('#experience') },
+                        { href: '#skills', el: $('#skills') },
+                        { href: '#contact', el: $('#contact') }
+                    ];
+
+                    for (var i = sections.length - 1; i >= 0; i--) {
+                        var sec = sections[i];
+                        if (sec.el.length && sec.el.offset().top <= triggerPoint) {
+                            currentSection = sec.href;
+                            break;
+                        }
+                    }
+                }
+
+                navLinks.removeClass('active');
+                $('.nav-link-custom[href="' + currentSection + '"]').addClass('active');
 
                 // About Reveal
                 var aboutSectionTop = $('.about-section').offset().top;
@@ -1357,7 +1706,7 @@
                 if (scroll > eduSectionTop - windowHeight + 100) {
                     if (!$('.education-section').hasClass('animated')) {
                         $('.education-section').addClass('animated');
-                        $('.edu-item').each(function (i) {
+                        $('.edu-card').each(function (i) {
                             var item = $(this);
                             setTimeout(function () {
                                 item.css('opacity', '1').css('transform', 'translateY(0)');
@@ -1404,61 +1753,32 @@
                 }
             });
 
-            // 3D Tilt Effect Logic (Disable on touch)
-            if (window.matchMedia("(hover: hover)").matches) {
-                $('.holo-card').mousemove(function (e) {
-                    var card = $(this);
-                    var offset = card.offset();
-                    var width = card.outerWidth();
-                    var height = card.outerHeight();
+            // 3D Tilt Effect Logic (Enabled for all devices)
+            $('.holo-card').mousemove(function (e) {
+                var card = $(this);
+                var offset = card.offset();
+                var width = card.outerWidth();
+                var height = card.outerHeight();
 
-                    var mouseX = e.pageX - offset.left;
-                    var mouseY = e.pageY - offset.top;
+                var mouseX = e.pageX - offset.left;
+                var mouseY = e.pageY - offset.top;
 
-                    var xPct = mouseX / width - 0.5;
-                    var yPct = mouseY / height - 0.5;
+                var xPct = mouseX / width - 0.5;
+                var yPct = mouseY / height - 0.5;
 
-                    // Rotate vector
-                    var rotateX = yPct * -25; // Max rotation deg
-                    var rotateY = xPct * 25;
+                // Rotate vector
+                var rotateX = yPct * -25; // Max rotation deg
+                var rotateY = xPct * 25;
 
-                    card.css('transform', `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`);
-                });
-
-                $('.holo-card').mouseleave(function () {
-                    var card = $(this);
-                    card.css('transform', 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)');
-                });
-            }
-
-            // Smooth Scrolling
-            $('a[href^="#"]').on('click', function (e) {
-                e.preventDefault();
-                var target = this.hash;
-                var $target = $(target);
-                $('html, body').stop().animate({
-                    'scrollTop': $target.offset().top - 100
-                }, 900, 'swing', function () {
-                    window.location.hash = target;
-                });
+                card.css('transform', `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`);
             });
 
-            // Highlight Nav on Scroll
-            $(window).scroll(function () {
-                var scrollDistance = $(window).scrollTop() + 150;
-                $('.nav-link-custom').removeClass('active');
-                $('section').each(function (i) {
-                    if ($(this).position().top <= scrollDistance) {
-                        $('.nav-link-custom').removeClass('active');
-                        $('.nav-link-custom').eq(i).addClass('active');
-                    }
-                });
-                // Fix for Home usually being 0
-                if (scrollDistance < 300) {
-                    $('.nav-link-custom').removeClass('active');
-                    $('.nav-link-custom').first().addClass('active');
-                }
+            $('.holo-card').mouseleave(function () {
+                var card = $(this);
+                card.css('transform', 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)');
             });
+
+
 
         });
     </script>
