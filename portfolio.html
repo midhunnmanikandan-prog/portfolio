@@ -58,6 +58,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             transition: color 0.3s;
+            white-space: nowrap;
         }
 
         .nav-link-custom:hover,
@@ -65,9 +66,13 @@
             color: var(--text-gold);
         }
 
-        /* Portfolio Grid */
+        /* Portfolio Sections */
         .portfolio-section {
-            padding: 150px 0 100px;
+            padding: 150px 0 60px;
+        }
+
+        .portfolio-section-interior {
+            padding: 60px 0 100px;
         }
 
         .page-title {
@@ -75,6 +80,49 @@
             color: var(--text-white);
             margin-bottom: 3rem;
             text-align: center;
+        }
+
+        /* Section Heading */
+        .section-heading {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.4rem;
+            color: var(--text-gold);
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section-heading::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--text-gold), transparent);
+        }
+
+        /* Subsection Label */
+        .subsection-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--text-muted);
+            margin: 40px 0 20px;
+            padding-left: 5px;
+            border-left: 3px solid var(--text-gold);
+            padding: 5px 0 5px 15px;
+        }
+
+        /* Section Divider */
+        .section-divider {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(197, 164, 126, 0.3), transparent);
+            margin: 60px 0;
         }
 
         .portfolio-item {
@@ -172,6 +220,10 @@
             .portfolio-item {
                 height: 250px;
             }
+
+            .section-heading {
+                font-size: 2rem;
+            }
         }
 
         @media (max-width: 576px) {
@@ -182,11 +234,24 @@
             }
 
             .portfolio-item {
-                height: 200px;
+                height: 150px;
+                margin-bottom: 10px;
+            }
+
+            .row {
+                --bs-gutter-x: 10px;
             }
 
             .page-title {
                 font-size: 2rem;
+            }
+
+            .section-heading {
+                font-size: 1.6rem;
+            }
+
+            .subsection-label {
+                font-size: 0.75rem;
             }
         }
     </style>
@@ -197,22 +262,47 @@
     <!-- Nav -->
     <nav class="navbar-custom">
         <a href="index.html" class="nav-link-custom"><i class="fas fa-arrow-left"></i> Back to Home</a>
-        <a href="#" class="nav-link-custom active">Full Portfolio</a>
+        <a href="#exterior" class="nav-link-custom">Exterior</a>
+        <a href="#interior" class="nav-link-custom">Interior</a>
     </nav>
 
-    <!-- Main Content -->
-    <section class="portfolio-section">
+    <!-- Exterior Section -->
+    <section class="portfolio-section" id="exterior">
         <div class="container">
             <h1 class="page-title">Full Portfolio <span
                     style="color:var(--text-gold); font-size:1.5rem; vertical-align:middle; display:block; margin-top:10px; font-family:'Inter'; letter-spacing:2px; text-transform:uppercase;">Selected
                     Works</span></h1>
 
-            <div class="row" id="portfolio-grid">
-                <!-- Javascript will populate this -->
+            <h2 class="section-heading">Exterior Visualization</h2>
+
+            <!-- Residential -->
+            <div class="subsection-label">Residential</div>
+            <div class="row" id="grid-residential">
+            </div>
+
+            <!-- Commercial Apartments -->
+            <div class="subsection-label">Commercial Apartments</div>
+            <div class="row" id="grid-commercial">
+            </div>
+
+            <!-- Residential Villa -->
+            <div class="subsection-label">Residential Villa</div>
+            <div class="row" id="grid-villa">
+            </div>
+        </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- Interior Section -->
+    <section class="portfolio-section-interior" id="interior">
+        <div class="container">
+            <h2 class="section-heading">Interior Visualization</h2>
+
+            <div class="row" id="grid-interior">
             </div>
 
             <div class="text-center mt-5">
-                <p class="text-muted">Showing 52 Projects</p>
                 <div class="d-flex justify-content-center gap-3">
                     <button class="btn btn-outline-light rounded-pill px-4"
                         onclick="window.scrollTo({top:0, behavior:'smooth'})">Back to Top</button>
@@ -232,44 +322,100 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
-            // Generate Portfolio Items
-            const images = [
-                { src: './images/image1.jpeg', cat: 'Exterior' },
-                { src: './images/image2.jpeg', cat: 'Commercial' },
-                { src: './images/image3.jpeg', cat: 'Interior' },
-                { src: './images/image5.jpeg', cat: 'Residential' }
+
+            // --- IMAGE DATA ---
+
+            // Commercial Apartments
+            const commercialApts = [
+                { src: './images/EXTERIOR/COMMERCIAL APARTMENTS/Commercial Office Elevation - Gujarat.jpg', type: 'Commercial Apartments', name: 'Commercial Office Elevation', location: 'Gujarat' },
+                { src: './images/EXTERIOR/COMMERCIAL APARTMENTS/DUPLEX-ELEVATION---MAHARASHTRA.jpg', type: 'Commercial Apartments', name: 'Duplex Elevation', location: 'Maharashtra' },
+                { src: './images/EXTERIOR/COMMERCIAL APARTMENTS/G+2 ELEVATION HAREESH  ODISHA.jpg', type: 'Commercial Apartments', name: 'G+2 Elevation', location: 'Odisha' },
+                { src: './images/EXTERIOR/COMMERCIAL APARTMENTS/G+2 ELEVATION HIMANSHU MAROO MADHYA PRADESH.jpg', type: 'Commercial Apartments', name: 'G+2 Elevation', location: 'Madhya Pradesh' },
+                { src: './images/EXTERIOR/COMMERCIAL APARTMENTS/G+2 ELEVATION M J FOUNDATION BANGALORE.jpg', type: 'Commercial Apartments', name: 'G+2 Elevation', location: 'Bangalore' },
+                { src: './images/EXTERIOR/COMMERCIAL APARTMENTS/G+2 ELEVATION Talikoti BANGALORE.jpg', type: 'Commercial Apartments', name: 'G+2 Elevation ', location: 'Bangalore' },
+                { src: './images/EXTERIOR/COMMERCIAL APARTMENTS/G+3 ELEVATION ANIL DELHI.jpg', type: 'Commercial Apartments', name: 'G+3 Elevation', location: 'Delhi' },
+                { src: './images/EXTERIOR/COMMERCIAL APARTMENTS/G+3 ELEVATION HIMANSHU UTTARAKHAND.jpg', type: 'Commercial Apartments', name: 'G+3 Elevation', location: 'Uttarakhand' },
+                { src: './images/EXTERIOR/COMMERCIAL APARTMENTS/G+4 ELEVATION VAIBHAV MAHARASHTRA.jpg', type: 'Commercial Apartments', name: 'G+4 Elevation', location: 'Maharashtra' },
+                { src: './images/EXTERIOR/COMMERCIAL APARTMENTS/G+7 CLASSICAL APARTMENT ELEVATION   ( AJAY BANGALORE ).png', type: 'Commercial Apartments', name: 'G+7 Classical Apartment Elevation', location: 'Bangalore' },
             ];
 
-            const container = $('#portfolio-grid');
-            const totalItems = 52;
+            // Residential
+            const residential = [
+                { src: './images/EXTERIOR/RESIDENTIAL/ABHILASH  - RESIDENTIAL PROJECT PALAKKAD (2).jpg', type: 'Residential', name: 'Abhilash', location: 'Palakkad' },
+                { src: './images/EXTERIOR/RESIDENTIAL/ADHITHYA  GUJARAT.jpg', type: 'Residential', name: 'Adhithya', location: 'Gujarat' },
+                { src: './images/EXTERIOR/RESIDENTIAL/ANCY SANTHOSH  VAYANAD.png', type: 'Residential', name: 'Ancy Santhosh', location: 'Wayanad' },
+                { src: './images/EXTERIOR/RESIDENTIAL/FAISAL  KANNUR.png', type: 'Residential', name: 'Faisal', location: 'Kannur' },
+                { src: './images/EXTERIOR/RESIDENTIAL/KUNHAMMAD  RENOVATION PROJECT  MALAPPURAM.jpeg', type: 'Residential', name: 'Kunhammad', location: 'Malappuram' },
+                { src: './images/EXTERIOR/RESIDENTIAL/NALINI  MALAPPURAM.jpg', type: 'Residential', name: 'Nalini', location: 'Malappuram' },
+                { src: './images/EXTERIOR/RESIDENTIAL/SUGANTHI  RESIDENTIAL PROJECT PALAKKAD.jpg', type: 'Residential', name: 'Suganthi', location: 'Palakkad' },
+                { src: './images/EXTERIOR/RESIDENTIAL/SURESH PALAKKAD.jpg', type: 'Residential', name: 'Suresh', location: 'Palakkad' },
+                { src: './images/EXTERIOR/RESIDENTIAL/UPPU KOZHIKODE.jpeg', type: 'Residential', name: 'Uppu', location: 'Kozhikode' },
+                { src: './images/EXTERIOR/RESIDENTIAL/VIJAYAN  MALAPPURAM.png', type: 'Residential', name: 'Vijayan', location: 'Malappuram' },
+                { src: './images/EXTERIOR/RESIDENTIAL/YADHAV  PUNE.jpg', type: 'Residential', name: 'Yadhav', location: 'Pune' },
+            ];
 
-            for (let i = 0; i < totalItems; i++) {
-                const img = images[i % images.length];
-                const item = `
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="portfolio-item">
-                            <img src="${img.src}" alt="Project ${i + 1}" class="portfolio-img">
-                            <div class="portfolio-overlay">
-                                <span class="portfolio-cat">${img.cat} Visualization</span>
-                                <h3 class="portfolio-name">Project Reference #${100 + i}</h3>
+            // Residential Villa
+            const residentialVilla = [
+                { src: './images/EXTERIOR/RESIDENTIAL VILLA/ANSS JEROME 02 - TamilNadu.jpg', type: 'Residential Villa', name: 'Anss Jerome', location: 'Tamil Nadu' },
+                { src: './images/EXTERIOR/RESIDENTIAL VILLA/BALAJI-DUPLEX-ELEVATION---TAMILNADU.jpg', type: 'Residential Villa', name: 'Balaji', location: 'Tamil Nadu' },
+                { src: './images/EXTERIOR/RESIDENTIAL VILLA/Dilip Singh Gurjar (MLA of Nagda), House elevation  - Madhya Pradesh.jpg', type: 'Residential Villa', name: 'Dilip Singh Gurjar (MLA of Nagda) — House Elevation', location: 'Madhya Pradesh' },
+                { src: './images/EXTERIOR/RESIDENTIAL VILLA/Duplex Elevation - Pune.jpg', type: 'Residential Villa', name: 'Duplex Elevation', location: 'Pune' },
+                { src: './images/EXTERIOR/RESIDENTIAL VILLA/G+2-Classic-elavation-Gujarat.jpg', type: 'Residential Villa', name: 'G+2 Classic Elevation', location: 'Gujarat' },
+                { src: './images/EXTERIOR/RESIDENTIAL VILLA/GAYATHRI DELHI.jpg', type: 'Residential Villa', name: 'Gayathri', location: 'Delhi' },
+                { src: './images/EXTERIOR/RESIDENTIAL VILLA/RENOVATION PROJECT FAIZAN GUJARAT ( 1 ).jpg', type: 'Residential Villa', name: 'Renovation Project (View 1)', location: 'Gujarat' },
+                { src: './images/EXTERIOR/RESIDENTIAL VILLA/RENOVATION PROJECT FAIZAN GUJARAT.jpg', type: 'Residential Villa', name: 'Renovation Project (View 2)', location: 'Gujarat' },
+            ];
+
+            // Interior
+            const interior = [
+                { src: './images/INTERIOR/BALCONY.png', type: 'Interior', name: 'Balcony' },
+                { src: './images/INTERIOR/BALCONY 2.png', type: 'Interior', name: 'Balcony' },
+                { src: './images/INTERIOR/BEDROOM.png', type: 'Interior', name: 'Bedroom' },
+                { src: './images/INTERIOR/bedroom2.png', type: 'Interior', name: 'Bedroom' },
+                { src: './images/INTERIOR/dining_1.png', type: 'Interior', name: 'Dining Area' },
+                { src: './images/INTERIOR/living-1.png', type: 'Interior', name: 'Living Room' },
+                { src: './images/INTERIOR/stair-2.png', type: 'Interior', name: 'Staircase' },
+                { src: './images/INTERIOR/study_3.png', type: 'Interior', name: 'Study Room' },
+                { src: './images/INTERIOR/Washroom.png', type: 'Interior', name: 'Washroom' },
+            ];
+
+            // --- RENDER FUNCTION ---
+            function renderGrid(containerSelector, items, isExterior) {
+                const container = $(containerSelector);
+                items.forEach(function (img) {
+                    const locationLine = isExterior && img.location
+                        ? `<span style="display:block; font-size:0.7rem; color:var(--text-muted); margin-top:3px; letter-spacing:1px;"><i class="fas fa-map-marker-alt" style="margin-right:4px;"></i>${img.location}</span>`
+                        : '';
+                    const item = `
+                        <div class="col-6 col-md-6 col-lg-4 mb-2 mb-md-4">
+                            <div class="portfolio-item">
+                                <img src="${img.src}" alt="${img.name}" class="portfolio-img" loading="lazy">
+                                <div class="portfolio-overlay">
+                                    <span class="portfolio-cat">${img.type}</span>
+                                    <h3 class="portfolio-name">${img.name}</h3>
+                                    ${locationLine}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `;
-                container.append(item);
+                    `;
+                    container.append(item);
+                });
             }
 
-            // Lightbox functionality
-            // Use event delegation for dynamically created elements
+            // --- POPULATE GRIDS ---
+            renderGrid('#grid-commercial', commercialApts, true);
+            renderGrid('#grid-residential', residential, true);
+            renderGrid('#grid-villa', residentialVilla, true);
+            renderGrid('#grid-interior', interior, false);
+
+            // --- LIGHTBOX ---
             $(document).on('click', '.portfolio-item', function () {
                 const src = $(this).find('img').attr('src');
                 $('#lightbox-img').attr('src', src);
                 $('#lightbox').fadeIn(300).css('display', 'flex');
             });
 
-            // Close logic
             $('#lightbox, .lightbox-close').on('click', function (e) {
-                // Close if clicking outside the image OR on the close button
                 if (e.target !== $('#lightbox-img')[0]) {
                     $('#lightbox').fadeOut(300);
                 }

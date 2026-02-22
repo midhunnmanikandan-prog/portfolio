@@ -219,7 +219,7 @@
             z-index: 2;
             top: 20px;
             right: 40px;
-            background-image: url('./images/image3.jpeg');
+            background-image: url('./images/EXTERIOR/RESIDENTIAL/ABHILASH  - RESIDENTIAL PROJECT PALAKKAD (2).jpg');
             background-size: cover;
             background-position: center;
             border: none;
@@ -353,6 +353,111 @@
             padding: 80px 0;
             background-color: #0f1115;
             border-top: 1px solid rgba(197, 164, 126, 0.1);
+        }
+
+        /* Stats Row */
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-top: 50px;
+            margin-bottom: 0;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+            position: relative;
+            padding: 35px 50px;
+            background: rgba(22, 25, 31, 0.7);
+            border: 1px solid rgba(197, 164, 126, 0.15);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+            transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                border-color 0.4s ease,
+                box-shadow 0.4s ease;
+        }
+
+        .stat-item.reveal-visible {
+            opacity: 1 !important;
+            transform: translateY(0) scale(1) !important;
+        }
+
+        .stat-item:hover {
+            border-color: rgba(197, 164, 126, 0.4);
+            box-shadow: 0 0 40px rgba(197, 164, 126, 0.08), 0 20px 40px rgba(0, 0, 0, 0.3);
+            transform: translateY(-5px) scale(1.02) !important;
+        }
+
+        .stat-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--text-gold), transparent);
+            transition: width 0.4s ease;
+        }
+
+        .stat-item:hover::before {
+            width: 100%;
+        }
+
+        .stat-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--text-gold);
+            line-height: 1;
+            margin-bottom: 8px;
+            display: block;
+            text-shadow: 0 0 30px rgba(197, 164, 126, 0.2);
+        }
+
+        .stat-number .stat-suffix {
+            font-size: 2.5rem;
+            color: var(--text-gold);
+            opacity: 0.8;
+        }
+
+        .stat-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        @media (max-width: 576px) {
+            .stats-row {
+                gap: 20px;
+            }
+
+            .stat-item {
+                padding: 25px 35px;
+                flex: 1;
+                min-width: 140px;
+            }
+
+            .stat-number {
+                font-size: 2.8rem;
+            }
+
+            .stat-number .stat-suffix {
+                font-size: 1.8rem;
+            }
+
+            .stat-label {
+                font-size: 0.7rem;
+                letter-spacing: 2px;
+            }
         }
 
         .expertise-card {
@@ -1268,6 +1373,7 @@
         <section class="expertise-section">
             <div class="container">
                 <h2 class="about-heading text-center mb-5">Specialization</h2>
+
                 <div class="row g-4">
                     <div class="col-md-6">
                         <div class="expertise-card">
@@ -1285,8 +1391,23 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Stats Row -->
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <span class="stat-number"><span class="stat-counter" data-target="2">0</span><span
+                                class="stat-suffix">+</span></span>
+                        <span class="stat-label">Years Experience</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number"><span class="stat-counter" data-target="200">0</span><span
+                                class="stat-suffix">+</span></span>
+                        <span class="stat-label">Projects</span>
+                    </div>
+                </div>
             </div>
-        </section>
+    </div>
+    </section>
     </div>
 
     <!-- Portfolio Section -->
@@ -1295,46 +1416,50 @@
             <h2 class="about-heading text-center mb-5">Portfolio Highlights</h2>
 
             <div class="row">
-                <!-- Item 1: Exterior -->
+                <!-- Item 1: Faisal - Kannur -->
                 <div class="col-md-6">
                     <div class="portfolio-item">
-                        <img src="./images/image1.jpeg" alt="Exterior Render" class="portfolio-img">
+                        <img src="./images/EXTERIOR/RESIDENTIAL/FAISAL  KANNUR.png" alt="Faisal - Kannur"
+                            class="portfolio-img">
                         <div class="portfolio-overlay">
-                            <span class="portfolio-cat">Exterior Renders</span>
-                            <h3 class="portfolio-name">Modern Residence</h3>
+                            <span class="portfolio-cat">Residential</span>
+                            <h3 class="portfolio-name">Faisal — Kannur</h3>
                         </div>
                     </div>
                 </div>
 
-                <!-- Item 2: Commercial -->
+                <!-- Item 2: G+2 Elevation Hareesh - Odisha -->
                 <div class="col-md-6">
                     <div class="portfolio-item">
-                        <img src="./images/image2.jpeg" alt="Commercial Project" class="portfolio-img">
+                        <img src="./images/EXTERIOR/COMMERCIAL APARTMENTS/G+2 ELEVATION HAREESH  ODISHA.jpg"
+                            alt="G+2 Elevation Hareesh - Odisha" class="portfolio-img">
                         <div class="portfolio-overlay">
-                            <span class="portfolio-cat">Commercial Projects</span>
-                            <h3 class="portfolio-name">Skyline Tower</h3>
+                            <span class="portfolio-cat">Commercial Apartments</span>
+                            <h3 class="portfolio-name">G+2 Elevation — Odisha</h3>
                         </div>
                     </div>
                 </div>
 
-                <!-- Item 3: Interior -->
+                <!-- Item 3: Duplex Elevation - Pune -->
                 <div class="col-md-6">
                     <div class="portfolio-item">
-                        <img src="./images/image3.jpeg" alt="Interior Render" class="portfolio-img">
+                        <img src="./images/EXTERIOR/RESIDENTIAL VILLA/Duplex Elevation - Pune.jpg"
+                            alt="Duplex Elevation - Pune" class="portfolio-img">
                         <div class="portfolio-overlay">
-                            <span class="portfolio-cat">Interior Renders</span>
-                            <h3 class="portfolio-name">Luxury Living</h3>
+                            <span class="portfolio-cat">Residential Villa</span>
+                            <h3 class="portfolio-name">Duplex Elevation — Pune</h3>
                         </div>
                     </div>
                 </div>
 
-                <!-- Item 4: Residential -->
+                <!-- Item 4: Renovation Project Faizan - Gujarat -->
                 <div class="col-md-6">
                     <div class="portfolio-item">
-                        <img src="./images/image5.jpeg" alt="Residential Project" class="portfolio-img">
+                        <img src="./images/EXTERIOR/RESIDENTIAL VILLA/RENOVATION PROJECT FAIZAN GUJARAT.jpg"
+                            alt="Renovation Project Faizan - Gujarat" class="portfolio-img">
                         <div class="portfolio-overlay">
-                            <span class="portfolio-cat">Residential Projects</span>
-                            <h3 class="portfolio-name">Hillside Villa</h3>
+                            <span class="portfolio-cat">Residential Villa</span>
+                            <h3 class="portfolio-name">Renovation Project — Gujarat</h3>
                         </div>
                     </div>
                 </div>
@@ -1526,7 +1651,9 @@
                 <!-- Phone -->
                 <div class="col-md-4">
                     <div class="contact-item">
-                        <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
+                        <a href="tel:+917907511825" style="text-decoration:none;">
+                            <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
+                        </a>
                         <span class="contact-label">Phone</span>
                         <a href="tel:+917907511825" class="contact-value">7907511825</a>
                     </div>
@@ -1535,7 +1662,9 @@
                 <!-- Email -->
                 <div class="col-md-4">
                     <div class="contact-item">
-                        <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                        <a href="mailto:midhunnmanikandan@gmail.com" style="text-decoration:none;">
+                            <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                        </a>
                         <span class="contact-label">Email</span>
                         <a href="mailto:midhunnmanikandan@gmail.com"
                             class="contact-value">midhunnmanikandan@gmail.com</a>
@@ -1545,7 +1674,10 @@
                 <!-- Location -->
                 <div class="col-md-4">
                     <div class="contact-item">
-                        <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+                        <a href="https://maps.google.com/?q=Palakkad,Kerala" target="_blank"
+                            style="text-decoration:none;">
+                            <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+                        </a>
                         <span class="contact-label">Location</span>
                         <span class="contact-value">Palakkad, Kerala</span>
                     </div>
@@ -1661,12 +1793,44 @@
                 if (scroll > expertiseSectionTop - windowHeight + 100) {
                     if (!$('.expertise-section').hasClass('animated')) {
                         $('.expertise-section').addClass('animated');
+
+                        // Animate stat items first
+                        $('.stat-item').each(function (i) {
+                            var item = $(this);
+                            setTimeout(function () {
+                                item.addClass('reveal-visible');
+                            }, i * 250);
+                        });
+
+                        // Count-up animation for stat numbers
+                        setTimeout(function () {
+                            $('.stat-counter').each(function () {
+                                var $this = $(this);
+                                var target = parseInt($this.data('target'));
+                                var duration = target > 100 ? 2000 : 1500;
+                                var steps = 60;
+                                var stepDuration = duration / steps;
+                                var current = 0;
+                                var increment = target / steps;
+
+                                var timer = setInterval(function () {
+                                    current += increment;
+                                    if (current >= target) {
+                                        current = target;
+                                        clearInterval(timer);
+                                    }
+                                    $this.text(Math.floor(current));
+                                }, stepDuration);
+                            });
+                        }, 300);
+
+                        // Then animate expertise cards
                         $('.expertise-card').each(function (i) {
                             var card = $(this);
                             setTimeout(function () {
                                 card.addClass('reveal-visible');
                                 card.css('transform', 'translateY(0)');
-                            }, i * 200);
+                            }, 600 + i * 200);
                         });
                     }
                 }
