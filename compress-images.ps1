@@ -5,8 +5,8 @@
 Add-Type -AssemblyName System.Drawing
 
 $imageRoot = "c:\Promline\Archsol\images"
-$maxWidth = 1920    # Max width in pixels (Full HD)
-$jpegQuality = 75   # JPEG quality (1-100), 75 is a good balance
+$maxWidth = 2560    # Max width in pixels (QHD)
+$jpegQuality = 95   # JPEG quality (1-100), 95 is very high quality
 
 # Create encoder parameters for JPEG quality
 $jpegCodec = [System.Drawing.Imaging.ImageCodecInfo]::GetImageEncoders() | Where-Object { $_.MimeType -eq 'image/jpeg' }
