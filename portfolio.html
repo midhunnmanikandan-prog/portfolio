@@ -180,33 +180,200 @@
         /* Lightbox */
         #lightbox {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.97);
             z-index: 10000;
             display: none;
             justify-content: center;
             align-items: center;
-            cursor: pointer;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .lightbox-inner {
+            display: flex;
+            align-items: stretch;
+            gap: 0;
+            max-width: 1100px;
+            width: 100%;
+            max-height: 88vh;
+            border: 1px solid rgba(197,164,126,0.25);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 80px rgba(0,0,0,0.7);
+        }
+
+        .lightbox-img-wrap {
+            flex: 1 1 65%;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            min-height: 300px;
         }
 
         #lightbox-img {
-            max-width: 90%;
-            max-height: 90%;
-            border: 2px solid var(--text-gold);
-            border-radius: 4px;
-            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+            max-width: 100%;
+            max-height: 88vh;
+            object-fit: contain;
+            display: block;
+            transition: opacity 0.25s ease;
+        }
+
+        .lightbox-details {
+            flex: 0 0 300px;
+            background: #16191f;
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-left: 1px solid rgba(197,164,126,0.15);
+        }
+
+        .lightbox-details-top {
+            flex: 1;
+        }
+
+        .lightbox-cat-tag {
+            display: inline-block;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-gold);
+            border: 1px solid rgba(197,164,126,0.4);
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+
+        .lightbox-project-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            color: var(--text-white);
+            line-height: 1.3;
+            margin-bottom: 16px;
+        }
+
+        .lightbox-location {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 24px;
+        }
+
+        .lightbox-location i {
+            color: var(--text-gold);
+            font-size: 0.8rem;
+        }
+
+        .lightbox-divider {
+            height: 1px;
+            background: linear-gradient(90deg, var(--text-gold), transparent);
+            margin-bottom: 24px;
+            opacity: 0.3;
+        }
+
+        .lightbox-counter {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        /* Floating side nav arrows */
+        .lb-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10001;
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            background: rgba(15, 17, 21, 0.55);
+            border: 1px solid rgba(197,164,126,0.3);
+            color: var(--text-gold);
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: background 0.25s, border-color 0.25s, box-shadow 0.25s, transform 0.2s;
+            outline: none;
+            user-select: none;
+        }
+
+        .lb-arrow::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            border: 1px solid rgba(197,164,126,0);
+            transition: border-color 0.25s, box-shadow 0.25s;
+            pointer-events: none;
+        }
+
+        .lb-arrow:hover {
+            background: rgba(197,164,126,0.18);
+            border-color: rgba(197,164,126,0.7);
+            box-shadow: 0 0 24px rgba(197,164,126,0.3);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .lb-arrow:hover::before {
+            border-color: rgba(197,164,126,0.3);
+            box-shadow: 0 0 14px rgba(197,164,126,0.2);
+        }
+
+        .lb-arrow:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        #lb-prev { left: 18px; }
+        #lb-next { right: 18px; }
+
+        @media (max-width: 700px) {
+            #lb-prev { left: 10px; }
+            #lb-next { right: 10px; }
+            .lb-arrow { width: 44px; height: 44px; font-size: 0.95rem; }
         }
 
         .lightbox-close {
             position: absolute;
-            top: 30px;
-            right: 30px;
-            color: var(--text-white);
-            font-size: 2rem;
+            top: 18px;
+            right: 22px;
+            color: var(--text-muted);
+            font-size: 1.6rem;
             cursor: pointer;
+            line-height: 1;
+            z-index: 10;
+            transition: color 0.2s;
+        }
+
+        .lightbox-close:hover { color: var(--text-white); }
+
+        /* Mobile lightbox stacks vertically */
+        @media (max-width: 700px) {
+            .lightbox-inner {
+                flex-direction: column;
+                max-height: 95vh;
+                overflow-y: auto;
+            }
+            .lightbox-img-wrap { min-height: 200px; flex: none; }
+            #lightbox-img { max-height: 50vh; }
+            .lightbox-details {
+                flex: none;
+                border-left: none;
+                border-top: 1px solid rgba(197,164,126,0.15);
+                padding: 20px;
+            }
+            .lightbox-project-name { font-size: 1.2rem; }
         }
 
         /* Responsive */
@@ -325,10 +492,30 @@
         </div>
     </section>
 
+    <!-- Floating nav arrows (outside lightbox-inner) -->
+    <button class="lb-arrow" id="lb-prev" title="Previous"><i class="fas fa-chevron-left"></i></button>
+    <button class="lb-arrow" id="lb-next" title="Next"><i class="fas fa-chevron-right"></i></button>
+
     <!-- Lightbox -->
     <div id="lightbox">
-        <div class="lightbox-close">&times;</div>
-        <img id="lightbox-img" src="" alt="Full View">
+        <div class="lightbox-inner">
+            <div class="lightbox-img-wrap">
+                <img id="lightbox-img" src="" alt="Full View">
+            </div>
+            <div class="lightbox-details">
+                <div class="lightbox-close" id="lb-close">&times;</div>
+                <div class="lightbox-details-top">
+                    <div class="lightbox-cat-tag" id="lb-cat"></div>
+                    <div class="lightbox-project-name" id="lb-name"></div>
+                    <div class="lightbox-location" id="lb-location" style="display:none;">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span id="lb-loc-text"></span>
+                    </div>
+                    <div class="lightbox-divider"></div>
+                    <div class="lightbox-counter" id="lb-counter"></div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -356,14 +543,18 @@
                 { src: './images/EXTERIOR/RESIDENTIAL/ABHILASH  - RESIDENTIAL PROJECT PALAKKAD (2).jpg', type: 'Residential', name: 'Abhilash', location: 'Palakkad' },
                 { src: './images/EXTERIOR/RESIDENTIAL/ADHITHYA  GUJARAT.jpg', type: 'Residential', name: 'Adhithya', location: 'Gujarat' },
                 { src: './images/EXTERIOR/RESIDENTIAL/ANCY SANTHOSH  VAYANAD.jpg', type: 'Residential', name: 'Ancy Santhosh', location: 'Wayanad' },
+                { src: './images/EXTERIOR/RESIDENTIAL/BABU_KOLLAM.jpg', type: 'Residential', name: 'Babu', location: 'Kollam' },
                 { src: './images/EXTERIOR/RESIDENTIAL/FAISAL  KANNUR.jpg', type: 'Residential', name: 'Faisal', location: 'Kannur' },
-                { src: './images/EXTERIOR/RESIDENTIAL/KUNHAMMAD  RENOVATION PROJECT  MALAPPURAM.jpeg', type: 'Residential', name: 'Kunhammad', location: 'Malappuram' },
-                { src: './images/EXTERIOR/RESIDENTIAL/NALINI  MALAPPURAM.jpg', type: 'Residential', name: 'Nalini', location: 'Malappuram' },
+                { src: './images/EXTERIOR/RESIDENTIAL/HAKKIM_MALAPPURAM.jpg', type: 'Residential', name: 'Hakkim', location: 'Malappuram' },
+                { src: './images/EXTERIOR/RESIDENTIAL/NIJIL_THRISSUR.jpg', type: 'Residential', name: 'Nijil', location: 'Thrissur' },
+                { src: './images/EXTERIOR/RESIDENTIAL/RIYAS_MALAPPURAM.jpg', type: 'Residential', name: 'Riyas', location: 'Malappuram' },
+                { src: './images/EXTERIOR/RESIDENTIAL/SANJAY_KOZHIKODE.jpg', type: 'Residential', name: 'Sanjay', location: 'Kozhikode' },
+                { src: './images/EXTERIOR/RESIDENTIAL/SHYAM_WAYANAD.jpg', type: 'Residential', name: 'Shyam', location: 'Wayanad' },
                 { src: './images/EXTERIOR/RESIDENTIAL/SUGANTHI  RESIDENTIAL PROJECT PALAKKAD.jpg', type: 'Residential', name: 'Suganthi', location: 'Palakkad' },
                 { src: './images/EXTERIOR/RESIDENTIAL/SURESH PALAKKAD.jpg', type: 'Residential', name: 'Suresh', location: 'Palakkad' },
+                { src: './images/EXTERIOR/RESIDENTIAL/ULLAS_KANNUR.jpg', type: 'Residential', name: 'Ullas', location: 'Kannur' },
                 { src: './images/EXTERIOR/RESIDENTIAL/UPPU KOZHIKODE.jpeg', type: 'Residential', name: 'Uppu', location: 'Kozhikode' },
                 { src: './images/EXTERIOR/RESIDENTIAL/VIJAYAN  MALAPPURAM.jpg', type: 'Residential', name: 'Vijayan', location: 'Malappuram' },
-                { src: './images/EXTERIOR/RESIDENTIAL/YADHAV  PUNE.jpg', type: 'Residential', name: 'Yadhav', location: 'Pune' },
             ];
 
             // Residential Villa
@@ -386,6 +577,8 @@
                 { src: './images/INTERIOR/bedroom2.jpg', type: 'Interior', name: 'Bedroom' },
                 { src: './images/INTERIOR/dining_1.jpg', type: 'Interior', name: 'Dining Area' },
                 { src: './images/INTERIOR/living-1.jpg', type: 'Interior', name: 'Living Room' },
+                { src: './images/INTERIOR/NIJIL_BEDROOM.jpg', type: 'Interior', name: 'Nijil — Bedroom' },
+                { src: './images/INTERIOR/OFFICE_INTERIOR.jpg', type: 'Interior', name: 'Office Interior' },
                 { src: './images/INTERIOR/stair-2.jpg', type: 'Interior', name: 'Staircase' },
                 { src: './images/INTERIOR/study_3.jpg', type: 'Interior', name: 'Study Room' },
                 { src: './images/INTERIOR/Washroom.jpg', type: 'Interior', name: 'Washroom' },
@@ -398,6 +591,7 @@
                     const locationLine = isExterior && img.location
                         ? `<span style="display:block; font-size:0.7rem; color:var(--text-muted); margin-top:3px; letter-spacing:1px;"><i class="fas fa-map-marker-alt" style="margin-right:4px;"></i>${img.location}</span>`
                         : '';
+                    const locAttr = img.location ? `data-lb-loc="${img.location}"` : '';
                     const item = `
                         <div class="col-6 col-md-6 col-lg-4 mb-2 mb-md-4">
                             <div class="portfolio-item">
@@ -405,6 +599,7 @@
                                 <div class="portfolio-overlay">
                                     <span class="portfolio-cat">${img.type}</span>
                                     <h3 class="portfolio-name">${img.name}</h3>
+                                    <span ${locAttr} style="display:none;"></span>
                                     ${locationLine}
                                 </div>
                             </div>
@@ -421,17 +616,105 @@
             renderGrid('#grid-interior', interior, false);
 
             // --- LIGHTBOX ---
-            $(document).on('click', '.portfolio-item', function () {
-                const src = $(this).find('img').attr('src');
-                $('#lightbox-img').attr('src', src);
+            let allImages = []; // flat list: { src, type, name, location }
+            let currentIndex = 0;
+
+            // Build master image list after grids are rendered
+            function buildImageList() {
+                allImages = [];
+                $('.portfolio-item').each(function () {
+                    const src = $(this).find('img').attr('src');
+                    const cat = $(this).find('.portfolio-cat').text();
+                    const name = $(this).find('.portfolio-name').text();
+                    const loc = $(this).find('[data-lb-loc]').attr('data-lb-loc') || '';
+                    allImages.push({ src, type: cat, name, location: loc });
+                });
+            }
+
+            function openLightbox(index) {
+                currentIndex = index;
+                const img = allImages[index];
+                $('#lightbox-img').css('opacity', 0).attr('src', img.src).on('load', function () {
+                    $(this).animate({ opacity: 1 }, 200);
+                });
+                $('#lb-cat').text(img.type);
+                $('#lb-name').text(img.name);
+                if (img.location) {
+                    $('#lb-loc-text').text(img.location);
+                    $('#lb-location').show();
+                } else {
+                    $('#lb-location').hide();
+                }
+                $('#lb-counter').text('Image ' + (index + 1) + ' of ' + allImages.length);
                 $('#lightbox').fadeIn(300).css('display', 'flex');
+                $('.lb-arrow').css('display', 'flex');
+            }
+
+            function closeLightbox() {
+                $('#lightbox').fadeOut(300);
+                $('.lb-arrow').hide();
+            }
+
+            $(document).on('click', '.portfolio-item', function () {
+                buildImageList();
+                const src = $(this).find('img').attr('src');
+                const idx = allImages.findIndex(i => i.src === src);
+                openLightbox(idx >= 0 ? idx : 0);
             });
 
-            $('#lightbox, .lightbox-close').on('click', function (e) {
-                if (e.target !== $('#lightbox-img')[0]) {
-                    $('#lightbox').fadeOut(300);
+            $('#lb-close').on('click', function (e) {
+                e.stopPropagation();
+                closeLightbox();
+            });
+
+            $('#lightbox').on('click', function (e) {
+                if ($(e.target).is('#lightbox')) closeLightbox();
+            });
+
+            $('#lb-prev').on('click', function (e) {
+                e.stopPropagation();
+                const prev = (currentIndex - 1 + allImages.length) % allImages.length;
+                openLightbox(prev);
+            });
+
+            $('#lb-next').on('click', function (e) {
+                e.stopPropagation();
+                const next = (currentIndex + 1) % allImages.length;
+                openLightbox(next);
+            });
+
+            // Keyboard navigation
+            $(document).on('keydown', function (e) {
+                if ($('#lightbox').is(':visible')) {
+                    if (e.key === 'ArrowRight') $('#lb-next').trigger('click');
+                    if (e.key === 'ArrowLeft') $('#lb-prev').trigger('click');
+                    if (e.key === 'Escape') closeLightbox();
                 }
             });
+
+            // Touch swipe support
+            let touchStartX = 0;
+            let touchStartY = 0;
+            document.getElementById('lightbox').addEventListener('touchstart', function (e) {
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+            }, { passive: true });
+
+            document.getElementById('lightbox').addEventListener('touchend', function (e) {
+                const dx = e.changedTouches[0].clientX - touchStartX;
+                const dy = e.changedTouches[0].clientY - touchStartY;
+                if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+                    if (dx < 0) {
+                        // swipe left → next
+                        const next = (currentIndex + 1) % allImages.length;
+                        openLightbox(next);
+                    } else {
+                        // swipe right → prev
+                        const prev = (currentIndex - 1 + allImages.length) % allImages.length;
+                        openLightbox(prev);
+                    }
+                }
+            }, { passive: true });
         });
     </script>
 </body>
